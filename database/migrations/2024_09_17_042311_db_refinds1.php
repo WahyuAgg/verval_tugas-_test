@@ -21,11 +21,12 @@ return new class extends Migration
             $table->string('nama_asli_user', 100);
             $table->string('email', 100)->unique();
             $table->string('password', 255);
-            $table->string('no_telepon', 15);
+            $table->string('no_telepon', 20);
             $table->dateTime('tanggal_registrasi')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->string('url_foto_profil', 255)->nullable();
             $table->enum('status_akun', ['active', 'inactive', 'suspended'])->default('active');
             $table->dateTime('terakhir_login')->nullable();
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
 
         // Create ALAMAT table
@@ -42,6 +43,7 @@ return new class extends Migration
             $table->text('deskripsi')->nullable();
             $table->boolean('is_default')->default(false);
             $table->foreign('id_user')->references('id_user')->on('refindsuser');
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
 
         // Create KATEGORI table
@@ -49,6 +51,7 @@ return new class extends Migration
             $table->id('id_kategori');
             $table->string('nama_kategori', 100);
             $table->text('deskripsi_kategori')->nullable();
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
 
         // Create SUBKATEGORI table
@@ -58,6 +61,7 @@ return new class extends Migration
             $table->string('nama_subkategori', 100);
             $table->text('deskripsi_subkategori')->nullable();
             $table->foreign('id_kategori')->references('id_kategori')->on('kategori');
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
 
         // Create PRODUK table
@@ -76,6 +80,7 @@ return new class extends Migration
             $table->foreign('id_subkategori')->references('id_subkategori')->on('subkategori');
             $table->foreign('id_alamat')->references('id_alamat')->on('alamat');
             $table->foreign('id_user')->references('id_user')->on('refindsuser');
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
 
         // Create GAMBAR_PRODUK table
@@ -84,6 +89,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_produk');
             $table->string('url_gambar_produk', 255);
             $table->foreign('id_produk')->references('id_produk')->on('produk');
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
 
         // Create FAVORIT table
@@ -94,6 +100,7 @@ return new class extends Migration
             $table->primary(['id_user', 'id_produk']);
             $table->foreign('id_user')->references('id_user')->on('refindsuser');
             $table->foreign('id_produk')->references('id_produk')->on('produk');
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
 
         // Create PESANAN table
@@ -116,6 +123,7 @@ return new class extends Migration
             $table->foreign('id_produk')->references('id_produk')->on('produk');
             $table->foreign('id_alamat')->references('id_alamat')->on('alamat');
             $table->foreign('id_user_pembeli')->references('id_user')->on('refindsuser');
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
 
         // Create ULASAN table
@@ -126,6 +134,7 @@ return new class extends Migration
             $table->text('komentar')->nullable();
             $table->dateTime('tanggal_ulasan')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->foreign('id_pesanan')->references('id_pesanan')->on('pesanan');
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
     }
 

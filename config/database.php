@@ -93,6 +93,23 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        // 'db_refinds' => [
+        //     'driver' => 'mysql',
+        //     'host' => env('DB_REFINDS_HOST', '127.0.0.1'),
+        //     'port' => env('DB_REFINDS_PORT', '3306'),
+        //     'database' => env('DB_REFINDS_DATABASE', 'db_refinds'),
+        //     'username' => env('DB_REFINDS_USERNAME', 'root'),
+        //     'password' => env('DB_REFINDS_PASSWORD', ''),
+        //     'unix_socket' => env('DB_REFINDS_SOCKET', ''),
+        //     'charset' => 'utf8mb4',
+        //     'collation' => 'utf8mb4_unicode_ci',
+        //     'prefix' => '',
+        //     'strict' => true,
+        //     'engine' => null,
+        // ],
+
+
+
     ],
 
     /*

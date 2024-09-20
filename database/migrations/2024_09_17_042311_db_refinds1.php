@@ -25,6 +25,7 @@ return new class extends Migration
             $table->dateTime('tanggal_registrasi')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->string('url_foto_profil', 255)->nullable();
             $table->enum('status_akun', ['active', 'inactive', 'suspended'])->default('active');
+            $table->enum('level_account', ['user', 'admin', 'superadmin'])->default('user');
             $table->dateTime('terakhir_login')->nullable();
             $table->timestamps(); // Adds created_at and updated_at columns
         });
@@ -77,6 +78,8 @@ return new class extends Migration
             $table->dateTime('tanggal_post')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->enum('kondisi', ['new', 'used']);
             $table->enum('status_post', ['available', 'sold', 'hidden'])->default('available');
+            // visibilitas : pending
+            $table->boolean('visibilitas')->default(true);
             $table->foreign('id_subkategori')->references('id_subkategori')->on('subkategori');
             $table->foreign('id_alamat')->references('id_alamat')->on('alamat');
             $table->foreign('id_user')->references('id_user')->on('refindsuser');
@@ -112,20 +115,23 @@ return new class extends Migration
             $table->dateTime('tanggal_pesanan_dibuat')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->text('deskripsi')->nullable();
             $table->decimal('harga', 15, 2)->check('harga > 0');
+            // jumlah: pending
             $table->integer('jumlah')->check('jumlah >= 1');
+            // harga total: pending
             $table->decimal('harga_total', 15, 2)->check('harga_total > 0');
             $table->dateTime('tgl_konfirm_penjual')->nullable();
             $table->dateTime('tgl_pembatalan_pembeli')->nullable();
             $table->dateTime('tgl_pembatalan_penjual')->nullable();
             $table->dateTime('tgl_konfirm_selesai_pembeli')->nullable();
             $table->dateTime('tgl_konfirm_selesai_penjual')->nullable();
-            $table->enum('status_pesanan', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status_pesanan', ['pending', 'acc', 'completed', 'cancelled'])->default('pending');
             $table->foreign('id_produk')->references('id_produk')->on('produk');
             $table->foreign('id_alamat')->references('id_alamat')->on('alamat');
             $table->foreign('id_user_pembeli')->references('id_user')->on('refindsuser');
             $table->timestamps(); // Adds created_at and updated_at columns
         });
 
+        // ULASAN: pending
         // Create ULASAN table
         Schema::create('ulasan', function (Blueprint $table) {
             $table->id('id_ulasan');

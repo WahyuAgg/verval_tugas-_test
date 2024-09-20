@@ -28,7 +28,7 @@ class PesananFactory extends Factory
             'tgl_pembatalan_penjual' => $this->faker->optional()->dateTime,
             'tgl_konfirm_selesai_pembeli' => $this->faker->optional()->dateTime,
             'tgl_konfirm_selesai_penjual' => $this->faker->optional()->dateTime,
-            'status_pesanan' => $this->faker->randomElement(['pending', 'confirmed', 'completed', 'cancelled']),
+            'status_pesanan' => $this->faker->randomElement(['pending', 'acc', 'completed', 'cancelled']),
         ];
     }
 }

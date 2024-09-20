@@ -25,6 +25,7 @@ class ProdukFactory extends Factory
             'tanggal_post' => $this->faker->dateTime,
             'kondisi' => $this->faker->randomElement(['new', 'used']),
             'status_post' => $this->faker->randomElement(['available', 'sold', 'hidden']),
+            'visibilitas' => $this ->faker ->randomElement([1,0]),
         ];
     }
 }

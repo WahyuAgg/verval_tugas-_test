@@ -13,6 +13,8 @@ use App\Models\Favorit;
 use App\Models\Pesanan;
 use App\Models\Ulasan;
 
+
+
 class SeederDbRefinds extends Seeder
 {
     public function run()
@@ -31,3 +33,4 @@ class SeederDbRefinds extends Seeder
         Ulasan::factory(25)->create();
     }
 }
+//

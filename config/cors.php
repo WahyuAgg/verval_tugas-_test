@@ -31,4 +31,10 @@ return [
 
     'supports_credentials' => false,
 
+    'paths' => ['api/*'],
+    'allowed_origins' => ['http://localhost:3000'],
+    'allowed_methods' => ['*'],
+    'allowed_headers' => ['*'],
+
+
 ];

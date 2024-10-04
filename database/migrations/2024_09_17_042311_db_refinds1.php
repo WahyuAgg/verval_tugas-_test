@@ -14,14 +14,21 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::create('mockup_user', function (Blueprint $table) {
+            $table->id('id_user');
+            $table->string('nama_akun', 100);
+            $table->string('password', 255);
+            $table->timestamps(); // Adds created_at and updated_at columns
+        });
+
         // Create REFINDSUSER table
         Schema::create('refindsuser', function (Blueprint $table) {
             $table->id('id_user');
-            $table->string('nama_akun', 100);
+            $table->string('nama_akun', 100)->unique();
             $table->string('nama_asli_user', 100);
             $table->string('email', 100)->unique();
             $table->string('password', 255);
-            $table->string('no_telepon', 20);
+            $table->string('no_telepon', 20)->nullable();
             $table->dateTime('tanggal_registrasi')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->string('url_foto_profil', 255)->nullable();
             $table->enum('status_akun', ['active', 'inactive', 'suspended'])->default('active');
@@ -151,6 +158,7 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('mockup_user');
         Schema::dropIfExists('ulasan');
         Schema::dropIfExists('pesanan');
         Schema::dropIfExists('favorit');

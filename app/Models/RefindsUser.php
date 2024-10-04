@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+// use Laravel\Sanctum\HasApiTokens; // Pastikan ini ada
 
 class RefindsUser extends Model
 {
-    use HasFactory;
+    use HasFactory; // Tambahkan HasApiTokens di sini
 
     protected $table = 'refindsuser';
     protected $primaryKey = 'id_user';

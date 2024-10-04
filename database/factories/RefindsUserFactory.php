@@ -12,7 +12,7 @@ class RefindsUserFactory extends Factory
     public function definition()
     {
         return [
-            'nama_akun' => $this->faker->userName,
+            'nama_akun' => $this->faker->unique()->userName,
             'nama_asli_user' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
             'password' => bcrypt('password'), // Password is hashed

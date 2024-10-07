@@ -19,13 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-use App\Http\Controllers\MyApiController;
-
-Route::get('/data', [MyApiController::class, 'index']);
-Route::post('/data', [MyApiController::class, 'store']);
 
 
-// Testing insert data registrasi
+//  register controller
 use App\Http\Controllers\RegisterController;
 
 Route::post('/register', [RegisterController::class, 'register']);
@@ -40,7 +36,7 @@ Route::get('/csrf-token', function () {
 Route::post('/login', [LoginController::class, 'login']);
 
 
-// Menggunakan middleware Laravel Sanctum untuk melindungi rute ini
+// testing Menggunakan middleware Laravel Sanctum untuk melindungi rute ini
 Route::middleware('auth:sanctum')->get('/protected-route', function (Request $request) {
     // Jika pengguna terautentikasi, akan mengembalikan respons JSON
     // dengan pesan bahwa pengguna sudah terautentikasi
@@ -48,11 +44,6 @@ Route::middleware('auth:sanctum')->get('/protected-route', function (Request $re
 });
 
 
-
-use App\Http\Controllers\UserController;
-
-// Tambahkan rute untuk mendapatkan informasi pengguna
-Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'show']);
 
 
 

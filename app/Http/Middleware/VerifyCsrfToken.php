@@ -12,10 +12,12 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'api/register',
-        'api/csrf-token',
-        'api/login',
-        'api/data'
+        // mengecualikan CSRF untuk semua api/
+        'api/*'
+        // 'api/register',
+        // 'api/csrf-token',
+        // 'api/login',
+        // 'api/data'
     ];
 
 }

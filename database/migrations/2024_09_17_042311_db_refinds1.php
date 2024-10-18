@@ -14,12 +14,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mockup_user', function (Blueprint $table) {
-            $table->id('id_user');
-            $table->string('nama_akun', 100);
-            $table->string('password', 255);
-            $table->timestamps(); // Adds created_at and updated_at columns
-        });
+
 
         // Create REFINDSUSER table
         Schema::create('refindsuser', function (Blueprint $table) {
@@ -81,12 +76,12 @@ return new class extends Migration
             $table->string('url_teks_deskripsi', 255)->nullable();
             $table->string('nama_produk', 100);
             $table->decimal('harga', 15, 2)->check('harga > 0');
-            $table->integer('jumlah')->check('jumlah >= 0');
+            $table->integer('jumlah')->default(1);
             $table->dateTime('tanggal_post')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
-            $table->enum('kondisi', ['new', 'used']);
-            $table->enum('status_post', ['available', 'sold', 'hidden'])->default('available');
+            $table->enum('kondisi', ['new', 'used'])->default('used');
+            $table->enum('status_post', ['available', 'sold', 'unacc'])->default('unacc');
             // visibilitas : pending
-            $table->boolean('visibilitas')->default(true);
+            $table->boolean('visibilitas')->nullable()->default(null);
             $table->foreign('id_subkategori')->references('id_subkategori')->on('subkategori');
             $table->foreign('id_alamat')->references('id_alamat')->on('alamat');
             $table->foreign('id_user')->references('id_user')->on('refindsuser');
@@ -113,13 +108,13 @@ return new class extends Migration
             $table->timestamps(); // Adds created_at and updated_at columns
         });
 
-        // Create PESANAN table
-        Schema::create('pesanan', function (Blueprint $table) {
-            $table->id('id_pesanan');
+        // Create Transaksi table
+        Schema::create('transaksi', function (Blueprint $table) {
+            $table->id('id_transaksi');
             $table->unsignedBigInteger('id_produk');
             $table->unsignedBigInteger('id_alamat');
             $table->unsignedBigInteger('id_user_pembeli');
-            $table->dateTime('tanggal_pesanan_dibuat')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
+            $table->dateTime('tanggal_transaksi_dibuat')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->text('deskripsi')->nullable();
             $table->decimal('harga', 15, 2)->check('harga > 0');
             // jumlah: pending
@@ -131,7 +126,7 @@ return new class extends Migration
             $table->dateTime('tgl_pembatalan_penjual')->nullable();
             $table->dateTime('tgl_konfirm_selesai_pembeli')->nullable();
             $table->dateTime('tgl_konfirm_selesai_penjual')->nullable();
-            $table->enum('status_pesanan', ['pending', 'acc', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status_transaksi', ['pending', 'acc', 'completed', 'cancelled'])->default('pending');
             $table->foreign('id_produk')->references('id_produk')->on('produk');
             $table->foreign('id_alamat')->references('id_alamat')->on('alamat');
             $table->foreign('id_user_pembeli')->references('id_user')->on('refindsuser');
@@ -142,11 +137,11 @@ return new class extends Migration
         // Create ULASAN table
         Schema::create('ulasan', function (Blueprint $table) {
             $table->id('id_ulasan');
-            $table->unsignedBigInteger('id_pesanan');
+            $table->unsignedBigInteger('id_transaksi');
             $table->integer('rating')->check('rating BETWEEN 1 AND 5');
             $table->text('komentar')->nullable();
             $table->dateTime('tanggal_ulasan')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
-            $table->foreign('id_pesanan')->references('id_pesanan')->on('pesanan');
+            $table->foreign('id_transaksi')->references('id_transaksi')->on('transaksi');
             $table->timestamps(); // Adds created_at and updated_at columns
         });
     }
@@ -158,9 +153,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mockup_user');
         Schema::dropIfExists('ulasan');
-        Schema::dropIfExists('pesanan');
+        Schema::dropIfExists('transaksi');
         Schema::dropIfExists('favorit');
         Schema::dropIfExists('gambar_produk');
         Schema::dropIfExists('produk');

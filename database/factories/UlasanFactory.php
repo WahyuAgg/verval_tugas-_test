@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Ulasan;
-use App\Models\Pesanan;
+use App\Models\Transaksi;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UlasanFactory extends Factory
@@ -13,7 +13,7 @@ class UlasanFactory extends Factory
     public function definition()
     {
         return [
-            'id_pesanan' => Pesanan::factory(),
+            'id_transaksi' => Transaksi::factory(),
             'rating' => $this->faker->numberBetween(1, 5),
             'komentar' => $this->faker->text,
             'tanggal_ulasan' => $this->faker->dateTime,

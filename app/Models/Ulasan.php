@@ -12,10 +12,15 @@ class Ulasan extends Model
     protected $table = 'ulasan';
     protected $primaryKey = 'id_ulasan';
     public $incrementing = true;
-    protected $fillable = ['id_pesanan', 'rating', 'komentar', 'tanggal_ulasan'];
+    protected $fillable = [
+        'id_transaksi',
+        'rating',
+        'komentar',
+        'tanggal_ulasan'
+    ];
 
-    public function pesanan()
+    public function transaksi()
     {
-        return $this->belongsTo(Pesanan::class, 'id_pesanan');
+        return $this->belongsTo(Transaksi::class, 'id_transaksi');
     }
 }

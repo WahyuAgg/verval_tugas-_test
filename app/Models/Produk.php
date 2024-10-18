@@ -11,10 +11,19 @@ class Produk extends Model
 
     protected $table = 'produk';
     protected $primaryKey = 'id_produk';
-    public $incrementing = true;
+
     protected $fillable = [
-        'id_subkategori', 'id_alamat', 'id_user', 'url_teks_deskripsi', 'nama_produk',
-        'harga', 'jumlah', 'tanggal_post', 'kondisi', 'status_post'
+        'id_subkategori',
+        'id_alamat',
+        'id_user',
+        'url_teks_deskripsi',
+        'nama_produk',
+        'harga',
+        'jumlah',
+        'tanggal_post',
+        'kondisi',
+        'status_post',
+        'visibilitas',
     ];
 
     public function subkategori()
@@ -29,6 +38,7 @@ class Produk extends Model
 
     public function user()
     {
-        return $this->belongsTo(RefindsUser::class, 'id_user');
+        return $this->belongsTo(User::class, 'id_user');
     }
 }
+

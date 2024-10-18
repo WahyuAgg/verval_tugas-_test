@@ -12,7 +12,11 @@ class SubKategori extends Model
     protected $table = 'subkategori';
     protected $primaryKey = 'id_subkategori';
     public $incrementing = true;
-    protected $fillable = ['id_kategori', 'nama_subkategori', 'deskripsi_subkategori'];
+    protected $fillable = [
+        'id_kategori',
+        'nama_subkategori',
+        'deskripsi_subkategori'
+    ];
 
     public function kategori()
     {

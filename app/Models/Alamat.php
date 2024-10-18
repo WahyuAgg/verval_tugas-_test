@@ -13,8 +13,16 @@ class Alamat extends Model
     protected $primaryKey = 'id_alamat';
     public $incrementing = true;
     protected $fillable = [
-        'id_user', 'nama_lokasi', 'nama_penerima', 'url_map', 'provinsi', 'kota_kabupaten',
-        'kecamatan', 'kode_pos', 'deskripsi', 'is_default'
+        'id_user',
+        'nama_lokasi',
+        'nama_penerima',
+        'url_map',
+        'provinsi',
+        'kota_kabupaten',
+        'kecamatan',
+        'kode_pos',
+        'deskripsi',
+        'is_default'
     ];
 
     public function user()

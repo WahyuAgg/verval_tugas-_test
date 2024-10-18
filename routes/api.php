@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -44,7 +45,20 @@ Route::middleware('auth:sanctum')->get('/protected-route', function (Request $re
 });
 
 
+//Upload produk
+use App\Http\Controllers\ProdukUpController;
+
+Route::post('/produk_up', [ProdukUpController::class, 'upload']);
 
 
+use App\Http\Controllers\UserController;
+
+Route::middleware('auth:sanctum')->get('/user_data', [UserController::class, 'getUserData']);
 
 
+use App\Http\Controllers\TokenController;
+
+// In your routes/api.php
+Route::middleware('auth:sanctum')->get('/verify-token', function (Request $request) {
+    return response()->json(['message' => 'Token is valid', 'user' => $request->user()]);
+});

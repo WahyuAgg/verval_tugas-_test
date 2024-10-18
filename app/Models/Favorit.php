@@ -12,7 +12,11 @@ class Favorit extends Model
     protected $table = 'favorit';
     protected $primaryKey = null; // No primary key because this is a pivot table
     public $incrementing = false;
-    protected $fillable = ['id_user', 'id_produk', 'tanggal_favorit'];
+    protected $fillable = [
+        'id_user',
+        'id_produk',
+        'tanggal_favorit'
+    ];
 
     public function user()
     {

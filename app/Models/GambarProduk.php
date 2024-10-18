@@ -12,7 +12,10 @@ class GambarProduk extends Model
     protected $table = 'gambar_produk';
     protected $primaryKey = 'id_gambar_produk';
     public $incrementing = true;
-    protected $fillable = ['id_produk', 'url_gambar_produk'];
+    protected $fillable = [
+        'id_produk',
+        'url_gambar_produk'
+    ];
 
     public function produk()
     {

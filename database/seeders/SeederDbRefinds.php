@@ -10,7 +10,7 @@ use App\Models\SubKategori;
 use App\Models\Produk;
 use App\Models\GambarProduk;
 use App\Models\Favorit;
-use App\Models\Pesanan;
+use App\Models\Transaksi;
 use App\Models\Ulasan;
 
 
@@ -20,17 +20,17 @@ class SeederDbRefinds extends Seeder
     public function run()
     {
         // Seed the RefindsUser table
-        RefindsUser::factory(10)->create();
+        // RefindsUser::factory(5)->create();
+        // Kategori::factory(5)->create();
 
         // Seed other related tables
-        Alamat::factory(10)->create();
-        Kategori::factory(5)->create();
-        SubKategori::factory(10)->create();
-        Produk::factory(20)->create();
-        GambarProduk::factory(50)->create();
-        Favorit::factory(30)->create();
-        Pesanan::factory(15)->create();
-        Ulasan::factory(25)->create();
+        Alamat::factory(5)->create();
+        SubKategori::factory(5)->create();
+        Produk::factory(5)->create();
+        GambarProduk::factory(5)->create();
+        // Favorit::factory(5)->create();
+        Transaksi::factory(5)->create();
+        Ulasan::factory(5)->create();
     }
 }
 //

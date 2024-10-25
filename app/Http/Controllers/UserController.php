@@ -21,8 +21,8 @@ class UserController extends Controller
         if ($user) {
 
             //logging
-            Log::info('User Data: ', $user->toArray());
-            Log::info('LogUser Ditemukan');
+            // Log::info('User Data: ', $user->toArray());
+            // Log::info('LogUser Ditemukan');
             return response()->json($user);
         }
 

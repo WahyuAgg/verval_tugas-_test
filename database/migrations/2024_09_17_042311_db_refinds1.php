@@ -79,7 +79,7 @@ return new class extends Migration
             $table->integer('jumlah')->default(1);
             $table->dateTime('tanggal_post')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->enum('kondisi', ['new', 'used'])->default('used');
-            $table->enum('status_post', ['available', 'sold', 'unacc'])->default('unacc');
+            $table->enum('status_post', ['available', 'sold', 'unacc', 'rejected'])->default('unacc');
             // visibilitas : pending
             $table->boolean('visibilitas')->nullable()->default(null);
             $table->foreign('id_subkategori')->references('id_subkategori')->on('subkategori');

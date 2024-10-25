@@ -33,7 +33,8 @@ class ProdukUpController extends Controller
             'gambar_produk3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             // lanjut sampai gamabr 5
         ]);
-
+        
+        // Membuat objek produk 
         // Simpan produk ke database
         $produk = Produk::create([
             'id_subkategori' => $validatedData['id_subkategori'],

@@ -56,9 +56,33 @@ use App\Http\Controllers\UserController;
 Route::middleware('auth:sanctum')->get('/user_data', [UserController::class, 'getUserData']);
 
 
-use App\Http\Controllers\TokenController;
 
-// In your routes/api.php
+// Verivikasi dengan sanctum dan mengembalikan Validasi dan UserData
 Route::middleware('auth:sanctum')->get('/verify-token', function (Request $request) {
     return response()->json(['message' => 'Token is valid', 'user' => $request->user()]);
 });
+
+
+use App\Http\Controllers\ProdukController;
+
+Route::get('/produk', [ProdukController::class, 'getAllProduk']);
+Route::get('/produk/kategori/', [ProdukController::class, 'getAllProduk']);
+
+Route::get('/produk/subkategori/{id_subkategori}', [ProdukController::class, 'getProdukBySubkategori']);
+Route::get('/produk/kategori/{id_kategori}', [ProdukController::class, 'getProdukByKategori']);
+
+Route::get('/produk/user/{id_user}', [ProdukController::class, 'getProdukByUser']);
+Route::get('/produk/unacc', [ProdukController::class, 'getUnACCProduk']);
+
+// BELUM FIX TINGGAL TIDUR
+Route::get('produk/acc/{bool}', [ProdukController::class, 'accProduk']);
+
+use App\Http\Controllers\KategoriController;
+Route::get('/kategori', [KategoriController::class, 'getKategori']);
+
+
+
+Route::post('/produk/update-status/{id_produk}', [ProdukController::class, 'updateStatus']);
+
+
+

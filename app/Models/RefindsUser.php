@@ -3,16 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Laravel\Sanctum\HasApiTokens; // Pastikan ini ada
+use Illuminate\Foundation\Auth\User as Authenticatable; // Ganti Model dengan Authenticatable
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class RefindsUser extends Model
+class RefindsUser extends Authenticatable // Gunakan Authenticatable
 {
-    use HasFactory, HasApiTokens; // Use the HasApiTokens trait
+    use HasFactory, HasApiTokens, Notifiable; // Tambahkan Notifiable untuk fitur notifikasi, jika diperlukan
 
     protected $table = 'refindsuser';
     protected $primaryKey = 'id_user';
     public $incrementing = true;
+
     protected $fillable = [
         'nama_akun',
         'nama_asli_user',
@@ -25,6 +27,12 @@ class RefindsUser extends Model
         'terakhir_login'
     ];
 
+    protected $hidden = [
+        'password', // Sembunyikan password saat serialisasi
+        'remember_token',
+    ];
+
+    // Definisikan relasi dengan model lain
     public function alamat()
     {
         return $this->hasMany(Alamat::class, 'id_user');

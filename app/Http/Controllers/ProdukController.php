@@ -26,7 +26,7 @@ class ProdukController extends Controller
                 return url("storage/{$gambar->url_gambar_produk}");
             });
 
-            Log::info($listUrlGambar);
+            // Log::info($listUrlGambar);
 
             // Tambahkan atribut baru list_url_gambar
             $item->setAttribute('list_url_gambar', $listUrlGambar);
@@ -46,12 +46,13 @@ class ProdukController extends Controller
     }
 
 
+    // fungsi untuk mengambil produk yang belum di acc
     public function getUnACCProduk()
     {
         // Mengambil semua produk dari database
         $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
-        ->where('status_post', 'unacc')
-        ->get();;
+            ->where('status_post', 'unacc')
+            ->get();;
 
 
         // Modifikasi untuk menambahkan list_url_gambar
@@ -64,7 +65,7 @@ class ProdukController extends Controller
                 return url("storage/{$gambar->url_gambar_produk}");
             });
 
-            Log::info($listUrlGambar);
+            // Log::info($listUrlGambar);
 
             // Tambahkan atribut baru list_url_gambar
             $item->setAttribute('list_url_gambar', $listUrlGambar);
@@ -107,7 +108,7 @@ class ProdukController extends Controller
             ->first();
 
         // Log data produk dari user tersebut
-        Log::info($produk);
+        // Log::info($produk);
 
         // Mengirimkan data produk ke frontend sebagai JSON response
         return response()->json($produk);
@@ -135,7 +136,7 @@ class ProdukController extends Controller
                 return url("storage/{$gambar->url_gambar_produk}");
             });
 
-            Log::info($listUrlGambar);
+            // Log::info($listUrlGambar);
 
             // Tambahkan atribut baru list_url_gambar
             $item->setAttribute('list_url_gambar', $listUrlGambar);
@@ -179,5 +180,47 @@ class ProdukController extends Controller
         ], 200);
     }
 
+    public function searchProduk(Request $request)
+    {
+        $keywords = $request->input('keywords'); // Get the array of keywords
 
+        // Start building the query
+        $query = Produk::query();
+
+        // Loop through each keyword and add a 'where' condition for nama_produk
+        foreach ($keywords as $keyword) {
+            $query->where('nama_produk', 'LIKE', '%' . $keyword . '%');
+        }
+
+        // Execute the query and get the results
+        $products = $query->get();
+
+        // Return the products as a JSON response
+        return
+
+            response()->json($products);
+    }
+
+
+    public function getUserProduk()
+    {
+        try {
+            // Ambil ID pengguna saat ini
+            $userId = auth()->id();
+
+            // Query produk berdasarkan ID pengguna
+            $produkUser = Produk::where('id_user', $userId)->get();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $produkUser
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal mengambil produk pengguna saat ini',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

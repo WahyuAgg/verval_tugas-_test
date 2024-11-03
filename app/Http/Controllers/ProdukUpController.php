@@ -28,13 +28,13 @@ class ProdukUpController extends Controller
             'id_user' => 'required|integer',
             'nama_produk' => 'required|string|max:100',
             'harga' => 'required|numeric|min:0',
-            'gambar_produk1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'gambar_produk2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'gambar_produk3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'gambar_produk1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gambar_produk2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gambar_produk3' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             // lanjut sampai gamabr 5
         ]);
-        
-        // Membuat objek produk 
+
+        // Membuat objek produk
         // Simpan produk ke database
         $produk = Produk::create([
             'id_subkategori' => $validatedData['id_subkategori'],

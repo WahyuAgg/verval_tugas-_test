@@ -31,6 +31,21 @@ class SeederDbRefinds extends Seeder
         // Favorit::factory(5)->create();
         Transaksi::factory(5)->create();
         Ulasan::factory(5)->create();
+
+
+        // TESTING
+        // Seed the RefindsUser table
+        // RefindsUser::factory(50)->create();
+        // Kategori::factory(50)->create();
+
+        // // Seed other related tables
+        // Alamat::factory(50)->create();
+        // SubKategori::factory(50)->create();
+        // Produk::factory(50)->create();
+        // GambarProduk::factory(50)->create();
+        // Favorit::factory(50)->create();
+        // Transaksi::factory(50)->create();
+        // Ulasan::factory(50)->create();
     }
 }
 //

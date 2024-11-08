@@ -1,24 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use App\Models\Produk;
-use App\Models\GambarProduk;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
-namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\GambarProduk;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Foundation\Validation\ValidatesRequests; // Include this if needed
+use Illuminate\Foundation\Validation\ValidatesRequests; 
 
 class ProdukUpController extends Controller
 {
-    use ValidatesRequests; // Optional: if you need request validation
-
     public function upload(Request $request)
     {
         // Validasi request
@@ -28,13 +18,9 @@ class ProdukUpController extends Controller
             'id_user' => 'required|integer',
             'nama_produk' => 'required|string|max:100',
             'harga' => 'required|numeric|min:0',
-            'gambar_produk1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'gambar_produk2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'gambar_produk3' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            // lanjut sampai gamabr 5
+            'gambar_produk.*' => 'nullable|image|mimes:jpeg,jpg|max:2048', // Untuk gambar dalam array
         ]);
 
-        // Membuat objek produk
         // Simpan produk ke database
         $produk = Produk::create([
             'id_subkategori' => $validatedData['id_subkategori'],
@@ -47,25 +33,19 @@ class ProdukUpController extends Controller
             'status_post' => 'available',
         ]);
 
-        // Array untuk menyimpan URL gambar
         $uploadedImages = [];
 
-        // Upload gambar jika ada dan simpan ke direktori penyimpanan
-        if ($request->hasFile('gambar_produk1')) {
-            $path = $request->file('gambar_produk1')->store('produk_images', 'public');
-            $uploadedImages[] = $path;
+        // Proses upload gambar dalam array
+        if ($request->hasFile('gambar_produk')) {
+            foreach ($request->file('gambar_produk') as $file) {
+                if ($file) {
+                    $path = $file->store('produk_images', 'public');
+                    $uploadedImages[] = 'storage/' . $path; // Tambahkan prefix "storage/"
+                }
+            }
         }
-        if ($request->hasFile('gambar_produk2')) {
-            $path = $request->file('gambar_produk2')->store('produk_images', 'public');
-            $uploadedImages[] = $path;
-        }
-        if ($request->hasFile('gambar_produk3')) {
-            $path = $request->file('gambar_produk3')->store('produk_images', 'public');
-            $uploadedImages[] = $path;
-        }
-            // Lanjut smapai gambar 5
 
-        // Simpan URL gambar ke database
+        // Simpan URL gambar ke tabel GambarProduk
         foreach ($uploadedImages as $url_gambar) {
             GambarProduk::create([
                 'id_produk' => $produk->id_produk,
@@ -73,7 +53,6 @@ class ProdukUpController extends Controller
             ]);
         }
 
-        // Logging untuk memantau status request
         Log::info('Produk berhasil ditambahkan:', ['id_produk' => $produk->id_produk, 'gambar_produk' => $uploadedImages]);
 
         // Kirim respon sukses

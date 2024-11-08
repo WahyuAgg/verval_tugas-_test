@@ -50,6 +50,25 @@ class Produk extends Model
         return $this->hasMany(GambarProduk::class, 'id_produk');
     }
 
+    public function getTransformedAttributes()
+    {
+        // Setel atribut gambar_produk ke koleksi gambar
+        $this->setAttribute('gambar_produk', $this->gambarProduk);
+
+        // Buat list_url_gambar dengan mengonversi url_gambar_produk ke URL lengkap
+        $listUrlGambar = $this->gambarProduk->map(function ($gambar) {
+            return url("{$gambar->url_gambar_produk}");
+        });
+
+        // Tambahkan atribut baru list_url_gambar
+        $this->setAttribute('list_url_gambar', $listUrlGambar);
+
+        return $this;
+    }
+
+
+
+
 }
 
 

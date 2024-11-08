@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Log;
 
-class UserController extends Controller
+class RefindsUserController extends Controller
 {
     public function getUserData(Request $request)
     {
@@ -43,7 +43,7 @@ class UserController extends Controller
 
     public function updateUserData(Request $request)
     {
-        // PHPDoc comment that tells Intelephense (and other IDEs) that the variable $user is an instance of the RefindsUser model. 
+        // PHPDoc comment that tells Intelephense (and other IDEs) that the variable $user is an instance of the RefindsUser model.
         /** @var RefindsUser $user */
         $user = Auth::user();
 

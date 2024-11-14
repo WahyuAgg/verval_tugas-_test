@@ -15,7 +15,6 @@ class Alamat extends Model
     protected $fillable = [
         'id_user',
         'nama_lokasi',
-        'nama_penerima',
         'url_map',
         'provinsi',
         'kota_kabupaten',

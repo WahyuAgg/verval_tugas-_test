@@ -23,6 +23,7 @@ class Produk extends Model
         'tanggal_post',
         'kondisi',
         'status_post',
+        'search_point',
         'visibilitas',
     ];
 

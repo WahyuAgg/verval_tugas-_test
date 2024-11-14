@@ -7,9 +7,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable; // Ganti Model dengan Au
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class RefindsUser extends Authenticatable // Gunakan Authenticatable
+class RefindsUser extends Authenticatable
 {
-    use HasFactory, HasApiTokens, Notifiable; // Tambahkan Notifiable untuk fitur notifikasi, jika diperlukan
+    use HasFactory, HasApiTokens, Notifiable;
 
     protected $table = 'refindsuser';
     protected $primaryKey = 'id_user';
@@ -24,11 +24,12 @@ class RefindsUser extends Authenticatable // Gunakan Authenticatable
         'tanggal_registrasi',
         'url_foto_profil',
         'status_akun',
-        'terakhir_login'
+        'terakhir_login',
+        'verification_date'
     ];
 
     protected $hidden = [
-        'password', // Sembunyikan password saat serialisasi
+        'password',
         'remember_token',
     ];
 
@@ -42,4 +43,17 @@ class RefindsUser extends Authenticatable // Gunakan Authenticatable
     {
         return $this->hasMany(Favorit::class, 'id_user');
     }
+
+    // Fungsi untuk mendapatkan atribut dengan transformasi URL foto profil
+    public function getTransformedAttributes()
+    {
+        // Transformasi atribut
+        $attributes = $this->attributesToArray();
+
+        // Ubah url_foto_profil menjadi URL lengkap
+        $attributes['url_foto_profil_full'] = $this->url_foto_profil ? url($this->url_foto_profil) : null;
+
+        return $attributes;
+    }
 }
+

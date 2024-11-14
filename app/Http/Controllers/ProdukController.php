@@ -170,25 +170,30 @@ class ProdukController extends Controller
         ], 200);
     }
 
-    // Method untuk mencari produk berdasarkan kata kunci
+    // Method untuk mencari produk berdasarkan kata kunci dan menambah search_point
     public function searchProduk(Request $request)
     {
-        $keywords = $request->input('keywords'); // Ambil array kata kunci
+        $keywords = $request->input('keywords');
 
-        // Mulai membangun query
+        // Begin building the query with 'where' conditions for each keyword
         $query = Produk::query();
-
-        // Looping setiap kata kunci dan tambahkan kondisi 'where' untuk nama_produk
         foreach ($keywords as $keyword) {
             $query->where('nama_produk', 'LIKE', '%' . $keyword . '%');
         }
 
-        // Eksekusi query dan ambil hasilnya
+        // Fetch and increment search points in a single loop
         $products = $query->get();
+        foreach ($products as $product) {
+            // Increment search_point by 1 and save each product
+            /** @var Produk $product */
+            $product->search_point += 1;
+            $product->save();
+        }
 
-        // Kembalikan produk sebagai respons JSON
         return response()->json($products);
     }
+
+
 
     // Method untuk mendapatkan produk milik pengguna saat ini
     public function getUserProduk()
@@ -256,4 +261,18 @@ class ProdukController extends Controller
             'data' => $produks,
         ]);
     }
+
+    public function getTopSearchProducts()
+{
+    // Retrieve a maximum of 100 products ordered by search_point in descending order
+    $products = Produk::orderBy('search_point', 'desc')
+        ->limit(100)
+        ->get();
+
+    // Return the products as a JSON response
+    return response()->json($products);
+}
+
+
+
 }

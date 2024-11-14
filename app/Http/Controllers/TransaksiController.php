@@ -21,7 +21,7 @@ class TransaksiController extends Controller
         return response()->json($transaksis);
     }
 
-
+    // ambil transaksi pembelian
     public function getTransaksiPembelian()
     {
         $userId = auth()->id();
@@ -40,7 +40,7 @@ class TransaksiController extends Controller
         return response()->json($transaksis);
     }
 
-
+    // ambil transaksi penjualan
     public function getTransaksiPenjualan()
     {
         // Ambil id user yang sedang login
@@ -67,4 +67,50 @@ class TransaksiController extends Controller
 
         return response()->json($transaksis);
     }
+
+    public function konfirmasiPenjual($id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->konfirmasiPenjual();
+
+        return response()->json(['message' => 'Transaksi berhasil dikonfirmasi oleh penjual', 'transaksi' => $transaksi]);
+    }
+
+    // Endpoint untuk pembatalan oleh penjual
+    public function batalkanOlehPenjual($id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->batalkanOlehPenjual();
+
+        return response()->json(['message' => 'Transaksi berhasil dibatalkan oleh penjual', 'transaksi' => $transaksi]);
+    }
+
+    // Endpoint untuk pembatalan oleh pembeli
+    public function batalkanOlehPembeli($id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->batalkanOlehPembeli();
+
+        return response()->json(['message' => 'Transaksi berhasil dibatalkan oleh pembeli', 'transaksi' => $transaksi]);
+    }
+
+    // Endpoint untuk konfirmasi selesai oleh penjual
+    public function konfirmasiSelesaiOlehPenjual($id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->konfirmasiSelesaiOlehPenjual();
+
+        return response()->json(['message' => 'Transaksi berhasil dikonfirmasi selesai oleh penjual', 'transaksi' => $transaksi]);
+    }
+
+    // Endpoint untuk konfirmasi selesai oleh pembeli
+    public function konfirmasiSelesaiOlehPembeli($id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->konfirmasiSelesaiOlehPembeli();
+
+        return response()->json(['message' => 'Transaksi berhasil dikonfirmasi selesai oleh pembeli', 'transaksi' => $transaksi]);
+    }
+
+
 }

@@ -29,6 +29,8 @@ class Transaksi extends Model
         'status_transaksi',
     ];
 
+    // Relasi
+
     public function produk()
     {
         return $this->belongsTo(Produk::class, 'id_produk');
@@ -43,5 +45,39 @@ class Transaksi extends Model
     {
         return $this->belongsTo(User::class, 'id_user_pembeli');
     }
-}
 
+    // Fungsi untuk konfirmasi penjual
+    public function konfirmasiPenjual()
+    {
+        $this->tgl_konfirm_penjual = now();
+        $this->save();
+    }
+
+    // Fungsi untuk pembatalan oleh penjual
+    public function batalkanOlehPenjual()
+    {
+        $this->tgl_pembatalan_penjual = now();
+        $this->save();
+    }
+
+    // Fungsi untuk pembatalan oleh pembeli
+    public function batalkanOlehPembeli()
+    {
+        $this->tgl_pembatalan_pembeli = now();
+        $this->save();
+    }
+
+    // Fungsi untuk konfirmasi selesai oleh penjual
+    public function konfirmasiSelesaiOlehPenjual()
+    {
+        $this->tgl_konfirm_selesai_penjual = now();
+        $this->save();
+    }
+
+    // Fungsi untuk konfirmasi selesai oleh pembeli
+    public function konfirmasiSelesaiOlehPembeli()
+    {
+        $this->tgl_konfirm_selesai_pembeli = now();
+        $this->save();
+    }
+}

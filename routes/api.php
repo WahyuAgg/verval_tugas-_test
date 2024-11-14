@@ -67,16 +67,25 @@ Route::get('/produk/subkategori/{id_subkategori}', [ProdukController::class, 'ge
     // mengambil produk by id user
 Route::get('/produk/user/{id_user}', [ProdukController::class, 'getProdukByUser']);
 
-    // produk ACC
+    // get produk belum di acc
 Route::get('/produk/unacc', [ProdukController::class, 'getUnACCProduk']);
 Route::get('produk/acc/{bool}', [ProdukController::class, 'accProduk']);
 
 Route::post('/produk/update-status/{id_produk}', [ProdukController::class, 'updateStatus']);
 
+    // pencarian produk
 Route::post('/produk/search_produk', [ProdukController::class, 'searchProduk']);
 
+    // get produks by user id
 Route::get('/user/produk', [ProdukController::class, 'getUserProduk'])->middleware('auth:sanctum');
+
+    // filter produk
 Route::post('/produk/filter', [ProdukController::class, 'get_filtered_produk']);
+
+    // get produk by top search
+Route::get('/top-products', [ProdukController::class, 'getTopProducts']);
+
+
 
 
 
@@ -90,9 +99,20 @@ Route::get('/initkategori', [KategoriController::class, 'updateKategoriDanSubkat
 
 // CONTROLLER TRANSAKSI
 use App\Http\Controllers\TransaksiController;
-
+    // get trasaksis pembelian
 Route::middleware('auth:sanctum')->get('/transaksi/pembelian', [TransaksiController::class, 'getTransaksiPembelian']);
+    // get transaksis penjualan
 Route::middleware('auth:sanctum')->get('/transaksi/penjualan', [TransaksiController::class, 'getTransaksiPenjualan']);
+
+    // pembatalan dan konfirmasi transaksi
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/transaksi/{id}/batalkan-penjual', [TransaksiController::class, 'batalkanOlehPenjual']);
+    Route::post('/transaksi/{id}/batalkan-pembeli', [TransaksiController::class, 'batalkanOlehPembeli']);
+    Route::post('/transaksi/{id}/konfirmasi-selesai-penjual', [TransaksiController::class, 'konfirmasiSelesaiOlehPenjual']);
+    Route::post('/transaksi/{id}/konfirmasi-selesai-pembeli', [TransaksiController::class, 'konfirmasiSelesaiOlehPembeli']);
+});
+
+
 
 
 
@@ -105,4 +125,16 @@ Route::middleware('auth:sanctum')->get('/test-auth', function () {
 Route::middleware('auth:sanctum')->get('/verify-token', function (Request $request) {
     return response()->json(['message' => 'Token is valid', 'user' => $request->user()]);
 });
+
+
+// CONTROLLER DEBUG
+use App\Http\Controllers\TestingController;
+
+Route::get('/test-increment/{id}', [TestingController::class, 'testIncrement']);
+
+
+// CONTROLLER ULASAN
+use App\Http\Controllers\UlasanController;
+Route::middleware('auth:sanctum')->post('/ulasan', [UlasanController::class, 'store']);
+
 

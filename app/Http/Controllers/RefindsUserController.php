@@ -43,7 +43,6 @@ class RefindsUserController extends Controller
 
     public function updateUserData(Request $request)
     {
-        // PHPDoc comment that tells Intelephense (and other IDEs) that the variable $user is an instance of the RefindsUser model.
         /** @var RefindsUser $user */
         $user = Auth::user();
 
@@ -59,13 +58,27 @@ class RefindsUserController extends Controller
             'email' => 'required|email|max:255|unique:refindsuser,email,' . $user->id_user . ',id_user',
             'no_telepon' => 'required|string|max:15',
             'url_foto_profil' => 'nullable|url|max:255',
+            'foto_profil' => 'nullable|image|mimes:jpeg,jpg,png|max:2048', // For image file upload
         ]);
 
-        // Update user information
-        $user->update($request->only(['nama_akun', 'nama_asli_user', 'email', 'no_telepon', 'url_foto_profil']));
+        // Handle profile picture upload if provided
+        if ($request->hasFile('foto_profil')) {
+            // Store the uploaded profile picture
+            $path = $request->file('foto_profil')->store('profile_pictures', 'public');
 
-        return response()->json(['message' => 'User updated successfully', 'user' => $user]);
+            // Update the user's profile picture URL with the storage path
+            $user->url_foto_profil = asset('storage/' . $path);
+        }
+
+        // Update user information (including the profile picture URL if it was updated)
+        $user->update($request->only(['nama_akun', 'nama_asli_user', 'email', 'no_telepon']));
+
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => $user
+        ]);
     }
+
 
 
 

@@ -37,7 +37,6 @@ return new class extends Migration
             $table->id('id_alamat');
             $table->unsignedBigInteger('id_user');
             $table->string('nama_lokasi', 100);
-            $table->string('nama_penerima', 100);
             $table->string('url_map', 255)->nullable();
             $table->string('provinsi', 50);
             $table->string('kota_kabupaten', 50);

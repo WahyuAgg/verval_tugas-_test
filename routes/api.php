@@ -121,10 +121,18 @@ Route::middleware('auth:sanctum')->get('/test-auth', function () {
     return response()->json(['user_id' => auth()->id()]);
 });
 
-// Verivikasi dengan sanctum dan mengembalikan Validasi dan UserData
+
 Route::middleware('auth:sanctum')->get('/verify-token', function (Request $request) {
     return response()->json(['message' => 'Token is valid', 'user' => $request->user()]);
 });
+
+
+// CONTROLLER ACCOUNT REGSITRASION VERIVICATION
+use App\Http\Controllers\AccountVerificationController;
+    // Url untuk mendapatkan email verifikasi akun
+Route::get('/send-verification-token/{id_user}', [AccountVerificationController::class, 'sendVerificationToken']);
+
+
 
 
 // CONTROLLER DEBUG
@@ -135,6 +143,7 @@ Route::get('/test-increment/{id}', [TestingController::class, 'testIncrement']);
 
 // CONTROLLER ULASAN
 use App\Http\Controllers\UlasanController;
+    // untuk membuat ulasan
 Route::middleware('auth:sanctum')->post('/ulasan', [UlasanController::class, 'store']);
 
 

@@ -15,23 +15,41 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        // Validate input
+        // Validasi input
         $request->validate([
             'email' => 'required|email|string',
             'password' => 'required|string',
         ]);
 
-        // Check credentials using 'email' instead of 'nama_akun'
+        // Cari user berdasarkan email
         $user = RefindsUser::where('email', $request->email)->first();
 
-        if ($user && password_verify($request->password, $user->password)) {
-            // Create a token for the user
-            $token = $user->createToken('UserRegister')->plainTextToken;
+        if ($user) {
+            // Periksa apakah verification_date kosong (akun belum diverifikasi)
+            if (is_null($user->verification_date)) {
+                return response()->json([
+                    'message' => 'Account is not verified.',
+                    'user_id' => $user->id_user,
+                    'email' => $user->email
+                ], 403); // 403 Forbidden untuk akun yang belum diverifikasi
+            }
 
-            return response()->json(['message' => 'Login successful', 'token' => $token], 200);
+            // Verifikasi password
+            if (password_verify($request->password, $user->password)) {
+                // Buat token untuk user
+                $token = $user->createToken('UserLogin')->plainTextToken;
+
+                return response()->json([
+                    'message' => 'Login successful',
+                    'token' => $token
+                ], 200);
+            }
         }
 
-        return response()->json(['message' => 'Invalid credentials'], 401); // Use 401 for unauthorized access
+        // Respon jika kredensial tidak valid
+        return response()->json(['message' => 'Invalid credentials'], 401); // 401 untuk akses tidak sah
     }
+
+
 }
 

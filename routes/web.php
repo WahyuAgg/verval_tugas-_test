@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+// CONTROLLER ACCOUNT REGSITRASION VERIVICATION
+use App\Http\Controllers\AccountVerificationController;
+    // Url untuk mendapatkan email verifikasi akun
+Route::get('/verify_account/{token_verification}', [AccountVerificationController::class, 'verifyAccount']);

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Produk;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log; // Make sure to import the Log facade
 
 
@@ -11,7 +14,52 @@ use Illuminate\Support\Facades\Log; // Make sure to import the Log facade
 use App\Models\Transaksi;
 
 class TransaksiController extends Controller
+
 {
+    /**
+     * Membuat transaksi baru berdasarkan parameter URL.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function createTransaksi(Request $request)
+    {
+        // Validasi input dari URL parameter
+        $validator = Validator::make($request->query(), [
+            'id_produk' => 'required|exists:produk,id_produk',
+            'id_alamat' => 'required|exists:alamat,id_alamat',
+            'id_user_pembeli' => 'required|exists:refindsuser,id_user',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Ambil data produk berdasarkan id_produk dari parameter URL
+        $produk = Produk::findOrFail($request->query('id_produk'));
+
+        // Hitung harga_total berdasarkan jumlah
+        $harga_total = 1; // Hard Coded
+
+        // Buat transaksi baru
+        $transaksi = Transaksi::create([
+            'id_produk' => $request->query('id_produk'),
+            'id_alamat' => $request->query('id_alamat'),
+            'id_user_pembeli' => $request->query('id_user_pembeli'),
+            'tanggal_transaksi_dibuat' => now(),
+            'deskripsi' => $produk->deskripsi ?? '', // Jika ada deskripsi produk
+            'harga' => $produk->harga,
+            'jumlah' => 1, // Hard Coded
+            'harga_total' => $harga_total,
+            'status_transaksi' => 'pending', // Status default transaksi
+        ]);
+
+        return response()->json([
+            'message' => 'Transaksi berhasil dibuat.',
+            'transaksi' => $transaksi,
+        ], 201);
+    }
+
     // Ambil semua transaksi
     public function index()
     {

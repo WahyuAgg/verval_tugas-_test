@@ -19,14 +19,15 @@ class AccountVerificationMail extends Mailable
 
     public function build()
     {
-        // Mengambil URL backend dari .env (APP_URL)
-        $backendUrl = config('app.url');
+        // Generate verification URL dynamically using the url() helper
+        $verificationUrl = url("/verify_account/{$this->token}");
 
         return $this->subject('Account Verification')
                     ->view('emails.account_verification')
                     ->with([
-                        'verificationUrl' => "{$backendUrl}/verify_account/{$this->token}",
+                        'verificationUrl' => $verificationUrl,
                     ]);
     }
 }
+
 

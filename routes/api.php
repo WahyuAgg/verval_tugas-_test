@@ -51,7 +51,7 @@ Route::post('/update_user', [RefindsUserController::class, 'updateUserData'])->m
 
 
 
-// CONTROLLER PRODUK DOWN
+// CONTROLLER PRODUK GET
 use App\Http\Controllers\ProdukController;
 
     // mengambil semua produk
@@ -64,20 +64,25 @@ Route::get('/produk/kategori/{id_kategori}', [ProdukController::class, 'getProdu
     // mengambil produk by sub kategori
 Route::get('/produk/subkategori/{id_subkategori}', [ProdukController::class, 'getProdukBySubkategori']);
 
-    // mengambil produk by id user
+    // mengambil produk by id user, param = id_user
 Route::get('/produk/user/{id_user}', [ProdukController::class, 'getProdukByUser']);
+
+    // get produks by user id / param = $request->is_user / dengan auth
+Route::get('/user/produk', [ProdukController::class, 'getUserProduk'])->middleware('auth:sanctum');
+
 
     // get produk belum di acc
 Route::get('/produk/unacc', [ProdukController::class, 'getUnACCProduk']);
+
+    // Set acc/reject produk
 Route::get('produk/acc/{bool}', [ProdukController::class, 'accProduk']);
 
 Route::post('/produk/update-status/{id_produk}', [ProdukController::class, 'updateStatus']);
 
-    // pencarian produk
+    // Get Search produk
+    // param = "keywords" []
 Route::post('/produk/search_produk', [ProdukController::class, 'searchProduk']);
 
-    // get produks by user id
-Route::get('/user/produk', [ProdukController::class, 'getUserProduk'])->middleware('auth:sanctum');
 
     // filter produk
 Route::post('/produk/filter', [ProdukController::class, 'get_filtered_produk']);

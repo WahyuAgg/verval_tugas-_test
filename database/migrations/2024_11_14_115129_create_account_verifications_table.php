@@ -15,11 +15,13 @@ class CreateAccountVerificationsTable extends Migration
     {
         Schema::create('account_verifications', function (Blueprint $table) {
             $table->id('id_verification');
-            $table->foreignId('id_user')->constrained('refindsuser')->onDelete('cascade'); // Relasi ke tabel refindsuser
-            $table->string('verification_token', 255)->unique(); // Token verifikasi unik
-            $table->dateTime('expires_at'); // Tanggal kedaluwarsa token
-            $table->enum('status', ['pending', 'verified', 'expired'])->default('pending'); // Status verifikasi
-            $table->timestamps(); // Kolom created_at dan updated_at
+            $table->foreignId('id_user')
+                  ->constrained('refindsuser', 'id_user') 
+                  ->onDelete('cascade');
+            $table->string('verification_token', 255)->unique();
+            $table->dateTime('expires_at');
+            $table->enum('status', ['pending', 'verified', 'expired'])->default('pending');
+            $table->timestamps();
         });
     }
 
@@ -32,4 +34,5 @@ class CreateAccountVerificationsTable extends Migration
     {
         Schema::dropIfExists('account_verifications');
     }
+
 }

@@ -1,3 +1,13 @@
+# Abaikan semua di dalam storage
+/storage/*
+
+# Kecualikan folder storage/app/public/produk_images
+!storage/app/
+!storage/app/public/
+!storage/app/public/produk_images/
+
+
+
 /.phpunit.cache
 /node_modules
 /public/build
@@ -16,3 +26,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+

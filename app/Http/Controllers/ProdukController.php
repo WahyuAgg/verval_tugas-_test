@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ProdukController extends Controller
 {
-    // Fungsi untuk mengambil data produk yang available
     public function getAllProduk()
     {
-        // Mengambil semua produk dari database dan mentransformasikan data
+        // Mengambil semua produk yang tersedia, diurutkan berdasarkan id_produk terbesar
         $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
             ->where('status_post', 'available')
+            ->orderBy('id_produk', 'desc') // Mengurutkan berdasarkan id_produk terbesar
             ->get()
             ->map(function ($item) {
                 return $item->getTransformedAttributes(); // Memanggil method transformasi
@@ -30,6 +30,7 @@ class ProdukController extends Controller
         // Mengirimkan data ke frontend sebagai response JSON
         return response()->json($produk);
     }
+
 
 
     // fungsi untuk mengambil produk yang belum di acc
@@ -175,6 +176,11 @@ class ProdukController extends Controller
     {
         $keywords = $request->input('keywords');
 
+        // Pastikan 'keywords' bukan array kosong
+        if (empty($keywords)) {
+            return response()->json(['error' => 'Keywords are required.'], 400);
+        }
+
         // Begin building the query with 'where' conditions for each keyword
         $query = Produk::query();
         foreach ($keywords as $keyword) {
@@ -183,6 +189,8 @@ class ProdukController extends Controller
 
         // Fetch and increment search points in a single loop
         $products = $query->get();
+
+
         foreach ($products as $product) {
             // Increment search_point by 1 and save each product
             /** @var Produk $product */
@@ -190,8 +198,18 @@ class ProdukController extends Controller
             $product->save();
         }
 
-        return response()->json($products);
+        $productsResult = $query
+            // ->orderBy('search_point', 'desc')
+            ->get()
+            ->map(function ($item) {
+                return $item->getTransformedAttributes(); // Memanggil method transformasi
+            });
+
+        return response()->json($productsResult);
     }
+
+
+
 
 
 
@@ -203,7 +221,12 @@ class ProdukController extends Controller
             $userId = auth()->id();
 
             // Query produk berdasarkan ID pengguna
-            $produkUser = Produk::where('id_user', $userId)->get();
+            $produkUser = Produk::where('id_user', $userId)
+            ->orderBy('search_point', 'desc')
+            ->get()
+            ->map(function ($item) {
+                return $item->getTransformedAttributes(); // Memanggil method transformasi
+            });
 
             return response()->json([
                 'status' => 'success',
@@ -262,17 +285,27 @@ class ProdukController extends Controller
         ]);
     }
 
+
+
     public function getTopSearchProducts()
-{
-    // Retrieve a maximum of 100 products ordered by search_point in descending order
-    $products = Produk::orderBy('search_point', 'desc')
-        ->limit(100)
-        ->get();
+    {
+        // Mengambil semua produk yang tersedia, diurutkan berdasarkan id_produk terbesar
+        $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
+            ->where('status_post', 'available')
+            ->orderBy('search_point', 'desc')
+            ->limit(100)
+            ->get()
+            ->map(function ($item) {
+                return $item->getTransformedAttributes(); // Memanggil method transformasi
+            });
 
-    // Return the products as a JSON response
-    return response()->json($products);
-}
+        // Convert the $produk object to JSON
+        $jsonData = json_encode($produk);
 
+        // Save the JSON data to a file in the storage directory
+        Storage::disk('local')->put('produk_data.json', $jsonData);
 
-
+        // Mengirimkan data ke frontend sebagai response JSON
+        return response()->json($produk);
+    }
 }

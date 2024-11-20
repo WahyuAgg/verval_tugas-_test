@@ -65,7 +65,6 @@ class TransaksiController extends Controller
         return response()->json($transaksis);
     }
 
-    // ambil transaksi pembelian
     public function getTransaksiPembelian()
     {
         $userId = auth()->id();
@@ -73,44 +72,62 @@ class TransaksiController extends Controller
         // Log ID
         Log::info('User ID fetching transactions:', ['user_id' => $userId]);
 
-        // Ambil transaksi berdasarkan id_user_pembeli
-        $transaksis = Transaksi::with('produk')
+        // Ambil transaksi berdasarkan id_user_pembeli dengan gambarProduk
+        $transaksis = Transaksi::with(['produk.gambarProduk'])
             ->where('id_user_pembeli', $userId)
             ->get();
 
         // Log transactions
         Log::info('Fetched transactions for user ID ' . $userId, ['transactions' => $transaksis]);
 
+        // Map hasil transaksi untuk menerapkan transformasi pada setiap produk
+        $transaksis->each(function ($transaksi) {
+            if ($transaksi->produk) {
+
+                // Menambahkan penjelasan ke Intelephense
+                /**
+                 * @var \App\Models\Transaksi $transaksi
+                 * @property \App\Models\Produk $produk
+                 */
+                $transaksi->produk = $transaksi->produk->getTransformedAttributes();
+            }
+        });
+
         return response()->json($transaksis);
     }
+
 
     // ambil transaksi penjualan
     public function getTransaksiPenjualan()
     {
-        // Ambil id user yang sedang login
-
-        // kelas statis | tidak digunakan
-        // $userId = Auth::id();
-
-        // method helper global dinamis
+        // Ambil ID user saat ini
         $userId = auth()->id();
 
         // Ambil transaksi yang terkait dengan produk milik user saat ini
-        // Ambil semua transaksi
-        $transaksis = Transaksi::with('produk')
-
-            // ...di mana produk terkait dengan transaksi tersebut...
+        $transaksis = Transaksi::with(['produk.gambarProduk']) // Pastikan gambarProduk ikut dimuat
             ->whereHas('produk', function ($query) use ($userId) {
-
-                // ...memiliki id_user yang sama dengan userId yang diberikan.
                 $query->where('id_user', $userId);
             })
-
-            // Ambil data dari database
             ->get();
+
+
+        $transaksis->each(function ($transaksi) {
+            if ($transaksi->produk) {
+
+                // Menambahkan penjelasan ke Intelephense
+                /**
+                 * @var \App\Models\Transaksi $transaksi
+                 * @property \App\Models\Produk $produk
+                 */
+                $transaksi->produk = $transaksi->produk->getTransformedAttributes();
+            }
+        });
 
         return response()->json($transaksis);
     }
+
+
+
 
     public function konfirmasiPenjual($id)
     {
@@ -155,6 +172,4 @@ class TransaksiController extends Controller
 
         return response()->json(['message' => 'Transaksi berhasil dikonfirmasi selesai oleh pembeli', 'transaksi' => $transaksi]);
     }
-
-
 }

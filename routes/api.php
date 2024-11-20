@@ -47,6 +47,14 @@ use App\Http\Controllers\RefindsUserController;
 
 Route::middleware('auth:sanctum')->get('/user_data', [RefindsUserController::class, 'getUserData']);
 Route::get('/get_user', [RefindsUserController::class, 'getUserData'])->middleware('auth:sanctum');
+
+    //// update user data
+    // 'nama_akun' => 'required|string|max:255',
+    // 'nama_asli_user' => 'required|string|max:255',
+    // 'email' => 'required|email|max:255|unique:refindsuser,email,' . $user->id_user . ',id_user',
+    // 'no_telepon' => 'required|string|max:15',
+    // 'url_foto_profil' => 'nullable|url|max:255',
+    // 'foto_profil' => 'nullable|image|mimes:jpeg,jpg,png|max:2048', // Untuk upload file gambar
 Route::post('/update_user', [RefindsUserController::class, 'updateUserData'])->middleware('auth:sanctum');
 
 
@@ -84,11 +92,14 @@ Route::post('/produk/update-status/{id_produk}', [ProdukController::class, 'upda
 Route::post('/produk/search_produk', [ProdukController::class, 'searchProduk']);
 
 
-    // filter produk
+    //// filter produk
+    // $request->input('array_subkategori', []);
+    // $request->input('array_kategori', []);
+    // $request->input('anti_kategori', false);
 Route::post('/produk/filter', [ProdukController::class, 'get_filtered_produk']);
 
     // get produk by top search
-Route::get('/top-products', [ProdukController::class, 'getTopProducts']);
+Route::get('/top-products', [ProdukController::class, 'getTopSearchProducts']);
 
 
 
@@ -99,7 +110,6 @@ use App\Http\Controllers\KategoriController;
 
 Route::get('/kategori', [KategoriController::class, 'getKategori']);
 Route::get('/subkategori', [KategoriController::class, 'getSubkategori']);
-Route::get('/initkategori', [KategoriController::class, 'updateKategoriDanSubkategori']);
 
 
 // CONTROLLER TRANSAKSI

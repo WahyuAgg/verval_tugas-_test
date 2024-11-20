@@ -168,8 +168,9 @@ return new class extends Migration
         Schema::dropIfExists('subkategori');
         Schema::dropIfExists('kategori');
         Schema::dropIfExists('alamat');
-        Schema::dropIfExists('refindsuser');
         Schema::dropIfExists('account_verifications');
+        Schema::dropIfExists('refindsuser');
+
 
     }
 };

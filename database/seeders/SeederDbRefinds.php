@@ -23,26 +23,30 @@ class SeederDbRefinds extends Seeder
         // Kategori::factory(0)->create();
         // SubKategori::factory(0)->create();
 
-        //// FACTORIES
-        RefindsUser::factory(10)->create();
-        Alamat::factory(30)->create();
+        // //// RefindsUser & Alamat
+        // RefindsUser::factory(30)->create();
+        Alamat::factory(120)->create();
 
-        /// produk + gambar produk
-        $jumlahProduk = 30;
-        Produk::factory()->count($jumlahProduk)->create()->each(function ($produk) {
+        //// produk + gambar produk
+        $jumlahProduk = 500;
+        Produk::factory()->count($jumlahProduk)->create()
+        ->each(function ($produk) {
             // Membuat 4 gambar untuk setiap produk
             GambarProduk::factory()->count(4)->create([
                 'id_produk' => $produk->id_produk, // Menghubungkan gambar dengan produk
             ]);
         });
-        
-        // traksaksi + ulasan
+
+
+
+        //// traksaksi + ulasan
+        $jumlahTransaksi = 120;
         Transaksi::factory()
-        ->count(60)
+        ->count($jumlahTransaksi)
         ->create()
         ->each(function ($transaksi) {
             // Memberikan kemungkinan 50% untuk membuat ulasan
-            if (fake()->boolean(50)) { // 50% kemungkinan untuk memiliki ulasan
+            if (fake()->boolean(70)) { // 70% kemungkinan untuk memiliki ulasan
                 Ulasan::factory()->create([
                     'id_transaksi' => $transaksi->id_transaksi, // Menghubungkan ulasan dengan transaksi
                 ]);
@@ -62,7 +66,6 @@ class SeederDbRefinds extends Seeder
         // RefindsUser::factory(50)->create();
         // Kategori::factory(50)->create();
 
-        // // Seed other related tables
         // Alamat::factory(50)->create();
         // SubKategori::factory(50)->create();
         // Produk::factory(50)->create();

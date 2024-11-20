@@ -13,9 +13,8 @@ class AlamatFactory extends Factory
     public function definition()
     {
         return [
-            'id_user' => RefindsUser::factory(),
+            'id_user' => RefindsUser::inRandomOrder()->first()->id_user, // Mengambil ID pengguna secara acak
             'nama_lokasi' => $this->faker->word,
-            'nama_penerima' => $this->faker->name,
             'url_map' => $this->faker->url,
             'provinsi' => $this->faker->word,
             'kota_kabupaten' => $this->faker->word,

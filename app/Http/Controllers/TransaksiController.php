@@ -38,8 +38,6 @@ class TransaksiController extends Controller
         // Ambil data produk berdasarkan id_produk dari parameter URL
         $produk = Produk::findOrFail($request->query('id_produk'));
 
-        // Hitung harga_total berdasarkan jumlah
-        $harga_total = 1; // Hard Coded
 
         // Buat transaksi baru
         $transaksi = Transaksi::create([
@@ -49,8 +47,6 @@ class TransaksiController extends Controller
             'tanggal_transaksi_dibuat' => now(),
             'deskripsi' => $produk->deskripsi ?? '', // Jika ada deskripsi produk
             'harga' => $produk->harga,
-            'jumlah' => 1, // Hard Coded
-            'harga_total' => $harga_total,
             'status_transaksi' => 'pending', // Status default transaksi
         ]);
 

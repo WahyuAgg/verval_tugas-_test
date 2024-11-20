@@ -6,6 +6,7 @@ use App\Models\Ulasan;
 use App\Models\Transaksi;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+
 class UlasanFactory extends Factory
 {
     protected $model = Ulasan::class;
@@ -13,10 +14,11 @@ class UlasanFactory extends Factory
     public function definition()
     {
         return [
-            'id_transaksi' => Transaksi::factory(),
-            'rating' => $this->faker->numberBetween(1, 5),
+            'id_transaksi' => Transaksi::inRandomOrder()->first()->id_transaksi, // Mengambil transaksi secara acak
+            'rating' => $this->faker->numberBetween(1, 5), // Menggunakan $this->faker
             'komentar' => $this->faker->text,
             'tanggal_ulasan' => $this->faker->dateTime,
         ];
     }
 }
+

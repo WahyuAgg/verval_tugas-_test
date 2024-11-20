@@ -19,7 +19,6 @@ class Produk extends Model
         'url_teks_deskripsi',
         'nama_produk',
         'harga',
-        'jumlah',
         'tanggal_post',
         'kondisi',
         'status_post',

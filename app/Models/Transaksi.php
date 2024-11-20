@@ -19,8 +19,6 @@ class Transaksi extends Model
         'tanggal_transaksi_dibuat',
         'deskripsi',
         'harga',
-        'jumlah',
-        'harga_total',
         'tgl_konfirm_penjual',
         'tgl_pembatalan_pembeli',
         'tgl_pembatalan_penjual',

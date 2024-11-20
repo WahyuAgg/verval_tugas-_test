@@ -13,8 +13,8 @@ class GambarProdukFactory extends Factory
     public function definition()
     {
         return [
-            'id_produk' => Produk::factory(),
-            'url_gambar_produk' => $this->faker->imageUrl,
+            'id_produk' => Produk::inRandomOrder()->first()->id_produk, // Mengambil produk secara acak
+            'url_gambar_produk' => $this->faker->imageUrl, // URL gambar produk
         ];
     }
 }

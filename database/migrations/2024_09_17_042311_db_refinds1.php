@@ -29,6 +29,7 @@ return new class extends Migration
             $table->enum('status_akun', ['active', 'inactive', 'suspended'])->default('active');
             $table->enum('level_account', ['user', 'admin', 'superadmin'])->default('user');
             $table->dateTime('terakhir_login')->nullable();
+            $table->dateTime('verification_date')->nullable();
             $table->timestamps(); // Adds created_at and updated_at columns
         });
 
@@ -75,11 +76,10 @@ return new class extends Migration
             $table->string('url_teks_deskripsi', 255)->nullable();
             $table->string('nama_produk', 100);
             $table->decimal('harga', 15, 2)->check('harga > 0');
-            $table->integer('jumlah')->default(1);
             $table->dateTime('tanggal_post')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->enum('kondisi', ['new', 'used'])->default('used');
             $table->enum('status_post', ['available', 'sold', 'unacc', 'rejected'])->default('unacc');
-            // visibilitas : pending
+            $table->integer('search_point')->nullable()->default(0);
             $table->boolean('visibilitas')->nullable()->default(null);
             $table->foreign('id_subkategori')->references('id_subkategori')->on('subkategori');
             $table->foreign('id_alamat')->references('id_alamat')->on('alamat');
@@ -116,10 +116,6 @@ return new class extends Migration
             $table->dateTime('tanggal_transaksi_dibuat')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->text('deskripsi')->nullable();
             $table->decimal('harga', 15, 2)->check('harga > 0');
-            // jumlah: pending
-            $table->integer('jumlah')->check('jumlah >= 1');
-            // harga total: pending
-            $table->decimal('harga_total', 15, 2)->check('harga_total > 0');
             $table->dateTime('tgl_konfirm_penjual')->nullable();
             $table->dateTime('tgl_pembatalan_pembeli')->nullable();
             $table->dateTime('tgl_pembatalan_penjual')->nullable();
@@ -143,6 +139,18 @@ return new class extends Migration
             $table->foreign('id_transaksi')->references('id_transaksi')->on('transaksi');
             $table->timestamps(); // Adds created_at and updated_at columns
         });
+
+        // Account verification
+        Schema::create('account_verifications', function (Blueprint $table) {
+            $table->id('id_verification');
+            $table->foreignId('id_user')
+                  ->constrained('refindsuser', 'id_user')
+                  ->onDelete('cascade');
+            $table->string('verification_token', 255)->unique();
+            $table->dateTime('expires_at');
+            $table->enum('status', ['pending', 'verified', 'expired'])->default('pending');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -161,5 +169,7 @@ return new class extends Migration
         Schema::dropIfExists('kategori');
         Schema::dropIfExists('alamat');
         Schema::dropIfExists('refindsuser');
+        Schema::dropIfExists('account_verifications');
+
     }
 };

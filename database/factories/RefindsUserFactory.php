@@ -21,6 +21,7 @@ class RefindsUserFactory extends Factory
             'url_foto_profil' => $this->faker->imageUrl,
             'status_akun' => $this->faker->randomElement(['active', 'inactive', 'suspended']),
             'terakhir_login' => $this->faker->dateTime,
+            'verification_date' => $this->faker->dateTime,
         ];
     }
 }

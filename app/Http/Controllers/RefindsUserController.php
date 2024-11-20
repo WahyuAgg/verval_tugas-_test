@@ -64,7 +64,7 @@ class RefindsUserController extends Controller
         // Tangani upload foto profil jika disediakan
         if ($request->hasFile('foto_profil')) {
             // Simpan foto profil yang diunggah
-            $path = $request->file('foto_profil')->store('profile_pictures', 'public');
+            $path = $request->file('foto_profil')->store('pfp_images', 'public');
 
             // Perbarui URL foto profil pengguna dengan path penyimpanan
             $user->url_foto_profil = asset('storage/' . $path);

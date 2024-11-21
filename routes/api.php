@@ -123,14 +123,14 @@ Route::middleware('auth:sanctum')->get('/transaksi/penjualan', [TransaksiControl
 
     // pembatalan dan konfirmasi transaksi
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/transaksi/{id}/batalkan-penjual', [TransaksiController::class, 'batalkanOlehPenjual']);
-    Route::post('/transaksi/{id}/batalkan-pembeli', [TransaksiController::class, 'batalkanOlehPembeli']);
-    Route::post('/transaksi/{id}/konfirmasi-selesai-penjual', [TransaksiController::class, 'konfirmasiSelesaiOlehPenjual']);
-    Route::post('/transaksi/{id}/konfirmasi-selesai-pembeli', [TransaksiController::class, 'konfirmasiSelesaiOlehPembeli']);
+    Route::get('/transaksi/{id}/batalkan-penjual', [TransaksiController::class, 'batalkanOlehPenjual']);
+    Route::get('/transaksi/{id}/batalkan-pembeli', [TransaksiController::class, 'batalkanOlehPembeli']);
+    Route::get('/transaksi/{id}/konfirmasi-selesai-penjual', [TransaksiController::class, 'konfirmasiSelesaiOlehPenjual']);
+    Route::get('/transaksi/{id}/konfirmasi-selesai-pembeli', [TransaksiController::class, 'konfirmasiSelesaiOlehPembeli']);
 });
     // Membuat traksaksi
     // contoh penggunaan: GET /transaksi/create?id_produk=1&id_alamat=2&id_user_pembeli=3
-    
+
 Route::get('/transaksi/create', [TransaksiController::class, 'createTransaksi']);
 
 

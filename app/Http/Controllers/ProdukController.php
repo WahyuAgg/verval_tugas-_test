@@ -315,7 +315,7 @@ class ProdukController extends Controller
     // Mencari produk berdasarkan id_produk
     $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
         ->where('id_produk', $id)
-        ->where('status_post', 'available') // Opsional: memastikan hanya produk "available"
+        // ->where('status_post', 'available') // Opsional: memastikan hanya produk "available"
         ->first();
 
     if (!$produk) {

@@ -64,6 +64,8 @@ use App\Http\Controllers\ProdukController;
 
     // mengambil semua produk
 Route::get('/produk', [ProdukController::class, 'getAllProduk']);
+    // menagmbil produk berdasarkan produk id
+Route::get('/produk/{id}', [ProdukController::class, 'getProdukById']);
 
     // mengambil produk by kategori
 Route::get('/produk/kategori/', [ProdukController::class, 'getAllProduk']);
@@ -128,6 +130,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
     // Membuat traksaksi
     // contoh penggunaan: GET /transaksi/create?id_produk=1&id_alamat=2&id_user_pembeli=3
+    
 Route::get('/transaksi/create', [TransaksiController::class, 'createTransaksi']);
 
 

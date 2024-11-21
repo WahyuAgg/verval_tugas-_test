@@ -308,4 +308,28 @@ class ProdukController extends Controller
         // Mengirimkan data ke frontend sebagai response JSON
         return response()->json($produk);
     }
+
+
+    public function getProdukById($id)
+{
+    // Mencari produk berdasarkan id_produk
+    $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
+        ->where('id_produk', $id)
+        ->where('status_post', 'available') // Opsional: memastikan hanya produk "available"
+        ->first();
+
+    if (!$produk) {
+        // Jika produk tidak ditemukan, kirimkan respons dengan error
+        return response()->json([
+            'message' => 'Produk tidak ditemukan.',
+        ], 404);
+    }
+
+    // Transformasi atribut produk (jika ada metode transformasi di model)
+    $transformedProduk = $produk->getTransformedAttributes();
+
+    // Mengembalikan data produk sebagai respons JSON
+    return response()->json($transformedProduk);
+}
+
 }

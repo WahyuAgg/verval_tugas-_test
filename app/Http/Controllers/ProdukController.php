@@ -27,7 +27,7 @@ class ProdukController extends Controller
         $jsonData = json_encode($produk);
 
         // Save the JSON data to a file in the storage directory
-        Storage::disk('local')->put('produk_data.json', $jsonData);
+        // Storage::disk('local')->put('produk_data.json', $jsonData);
 
         // Mengirimkan data ke frontend sebagai response JSON
         return response()->json($produk);
@@ -68,7 +68,7 @@ class ProdukController extends Controller
         $jsonData = json_encode($produk);
 
         // Save the JSON data to a file in the storage directory
-        Storage::disk('local')->put('produk_data.json', $jsonData);
+        // Storage::disk('local')->put('produk_data.json', $jsonData);
 
 
         // Mengirimkan data ke frontend sebagai response JSON
@@ -147,7 +147,7 @@ class ProdukController extends Controller
         $jsonData = json_encode($produk);
 
         // Save the JSON data to a file in the storage directory
-        Storage::disk('local')->put('produk_data_by_kategori.json', $jsonData);
+        // Storage::disk('local')->put('produk_data_by_kategori.json', $jsonData);
 
         // Mengirimkan data ke frontend sebagai response JSON
         return response()->json($produk);
@@ -325,7 +325,7 @@ class ProdukController extends Controller
         $jsonData = json_encode($produk);
 
         // Save the JSON data to a file in the storage directory
-        Storage::disk('local')->put('produk_data.json', $jsonData);
+        // Storage::disk('local')->put('produk_data.json', $jsonData);
 
         // Mengirimkan data ke frontend sebagai response JSON
         return response()->json($produk);

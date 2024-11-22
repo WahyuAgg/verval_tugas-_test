@@ -19,15 +19,15 @@ class SeederDbRefinds extends Seeder
 {
     public function run()
     {
-        //// HARD CODED
+        /// HARD CODED
         // Kategori::factory(0)->create();
         // SubKategori::factory(0)->create();
 
-        //// RefindsUser & Alamat
+        /// RefindsUser & Alamat
         RefindsUser::factory(30)->create();
         Alamat::factory(120)->create();
 
-        //// produk + gambar produk
+        /// produk + gambar produk
         $jumlahProduk = 500;
         Produk::factory()->count($jumlahProduk)->create()
         ->each(function ($produk) {
@@ -39,7 +39,7 @@ class SeederDbRefinds extends Seeder
 
 
 
-        //// traksaksi + ulasan
+        /// traksaksi + ulasan
         $jumlahTransaksi = 120;
         Transaksi::factory()
         ->count($jumlahTransaksi)

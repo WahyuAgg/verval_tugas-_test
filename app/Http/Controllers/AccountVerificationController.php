@@ -63,7 +63,9 @@ class AccountVerificationController extends Controller
 
 
 
-
+     /**
+      * link untuk verifikasi akun dari email
+      */
      public function verifyAccount($token_verification)
      {
          // Cari token di tabel account_verifications

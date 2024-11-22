@@ -5,10 +5,13 @@ use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\GambarProduk;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Foundation\Validation\ValidatesRequests; 
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class ProdukUpController extends Controller
 {
+    /**
+     * untuk mengupload produk
+     */
     public function upload(Request $request)
     {
         // Validasi request

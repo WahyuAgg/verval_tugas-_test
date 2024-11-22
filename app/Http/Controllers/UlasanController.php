@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 
 class UlasanController extends Controller
 {
+    /**
+     * untuk membuat ulasan dari transaksi terpilih
+     */
     public function store(Request $request)
     {
         $request->validate([

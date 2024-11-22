@@ -9,12 +9,18 @@ use Illuminate\Http\Request;
 
 class KategoriController extends Controller
 {
+    /**
+     * get kategory data
+     */
     public function getKategori(){
         $kategori = Kategori::get();
 
         return response()->json($kategori);
     }
 
+    /**
+     * get subkategori data
+     */
     public function getSubkategori(){
         $subkategori = SubKategori::get();
 

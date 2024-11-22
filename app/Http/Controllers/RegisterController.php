@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
+    /**
+     * untuk mengupload data registrasi
+     */
     public function register(Request $request)
     {
         // Validasi data

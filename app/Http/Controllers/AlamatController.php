@@ -7,6 +7,9 @@ use App\Models\Alamat;
 
 class AlamatController extends Controller
 {
+    /**
+     * untuk menambahkan almat baru
+     */
     public function store(Request $request)
     {
         // Validate request data

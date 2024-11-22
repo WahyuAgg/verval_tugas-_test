@@ -23,7 +23,7 @@ class SeederDbRefinds extends Seeder
         // Kategori::factory(0)->create();
         // SubKategori::factory(0)->create();
 
-        // //// RefindsUser & Alamat
+        //// RefindsUser & Alamat
         RefindsUser::factory(30)->create();
         Alamat::factory(120)->create();
 

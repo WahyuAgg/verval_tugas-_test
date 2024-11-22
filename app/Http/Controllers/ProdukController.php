@@ -12,7 +12,9 @@ class ProdukController extends Controller
 {
     public function getAllProduk()
     {
-        // Mengambil semua produk yang tersedia, diurutkan berdasarkan id_produk terbesar
+        /**
+         * Mengambil semua produk yang tersedia, diurutkan berdasarkan id_produk terbesar
+         *  */
         $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
             ->where('status_post', 'available')
             ->orderBy('id_produk', 'desc') // Mengurutkan berdasarkan id_produk terbesar
@@ -32,8 +34,10 @@ class ProdukController extends Controller
     }
 
 
-
-    // fungsi untuk mengambil produk yang belum di acc
+    /**
+     * untuk mengambil semua produk yang belum di acc oleh admin
+     * lali dikirim ke dashboard admin
+     */
     public function getUnACCProduk()
     {
         // Mengambil semua produk dari database
@@ -73,9 +77,12 @@ class ProdukController extends Controller
 
 
 
+    /**
+     *
+     * Fungsi untuk mengambil produk berdasarkan id_subkategori
+     *
+     */
 
-    // Fungsi untuk mengambil produk berdasarkan id_subkategori
-    // mirip dengan sebelumnya tapi juga menerima param $is_subkategori
     public function getProdukBySubkategori($id_subkategori)
     {
         // Mengambil produk berdasarkan id_subkategori
@@ -103,7 +110,9 @@ class ProdukController extends Controller
     }
 
 
-    // fungsi untuk mengambil produk berdasarkan kategori
+    /**
+     * untuk mengambil produk berdasarkan kategri
+     */
     public function getProdukByKategori($id_kategori)
     {
         // Mengambil produk berdasarkan id_kategori dari tabel subkategori
@@ -145,7 +154,9 @@ class ProdukController extends Controller
     }
 
 
-    // fungsi untuk mengubah status postingan
+    /**
+     * fungsi untuk mengubah status postingan
+     */
     public function updateStatus(Request $request, $id_produk)
     {
         // Validasi input (pastikan status hanya 'rejected' atau 'available')
@@ -171,7 +182,10 @@ class ProdukController extends Controller
         ], 200);
     }
 
-    // Method untuk mencari produk berdasarkan kata kunci dan menambah search_point
+    /**
+     * Method untuk mencari produk berdasarkan kata kunci
+     * dan menambah search_point ke produk
+     */
     public function searchProduk(Request $request)
     {
         $keywords = $request->input('keywords');
@@ -213,7 +227,9 @@ class ProdukController extends Controller
 
 
 
-    // Method untuk mendapatkan produk milik pengguna saat ini
+    /**
+     * fungsi untuk mendapatkan produk dari pengguna saat ini
+     */
     public function getUserProduk()
     {
         try {
@@ -222,11 +238,11 @@ class ProdukController extends Controller
 
             // Query produk berdasarkan ID pengguna
             $produkUser = Produk::where('id_user', $userId)
-            ->orderBy('search_point', 'desc')
-            ->get()
-            ->map(function ($item) {
-                return $item->getTransformedAttributes(); // Memanggil method transformasi
-            });
+                ->orderBy('search_point', 'desc')
+                ->get()
+                ->map(function ($item) {
+                    return $item->getTransformedAttributes(); // Memanggil method transformasi
+                });
 
             return response()->json([
                 'status' => 'success',
@@ -241,7 +257,11 @@ class ProdukController extends Controller
         }
     }
 
-    // fungsi untuk mengambil produk yang difilter
+
+
+    /**
+     * untuk mengambil produk yang difilter
+     */
     public function get_filtered_produk(Request $request)
     {
         Log::info($request);
@@ -286,7 +306,9 @@ class ProdukController extends Controller
     }
 
 
-
+    /**
+     * untuk mengambil produk yang paling banyak dicari, berdasarkan search point
+     */
     public function getTopSearchProducts()
     {
         // Mengambil semua produk yang tersedia, diurutkan berdasarkan id_produk terbesar
@@ -310,26 +332,28 @@ class ProdukController extends Controller
     }
 
 
+    /**
+     * untuk mengambil produk berdasarkan id produk
+     */
     public function getProdukById($id)
-{
-    // Mencari produk berdasarkan id_produk
-    $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
-        ->where('id_produk', $id)
-        // ->where('status_post', 'available') // Opsional: memastikan hanya produk "available"
-        ->first();
+    {
+        // Mencari produk berdasarkan id_produk
+        $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
+            ->where('id_produk', $id)
+            // ->where('status_post', 'available') // Opsional: memastikan hanya produk "available"
+            ->first();
 
-    if (!$produk) {
-        // Jika produk tidak ditemukan, kirimkan respons dengan error
-        return response()->json([
-            'message' => 'Produk tidak ditemukan.',
-        ], 404);
+        if (!$produk) {
+            // Jika produk tidak ditemukan, kirimkan respons dengan error
+            return response()->json([
+                'message' => 'Produk tidak ditemukan.',
+            ], 404);
+        }
+
+        // Transformasi atribut produk (jika ada metode transformasi di model)
+        $transformedProduk = $produk->getTransformedAttributes();
+
+        // Mengembalikan data produk sebagai respons JSON
+        return response()->json($transformedProduk);
     }
-
-    // Transformasi atribut produk (jika ada metode transformasi di model)
-    $transformedProduk = $produk->getTransformedAttributes();
-
-    // Mengembalikan data produk sebagai respons JSON
-    return response()->json($transformedProduk);
-}
-
 }

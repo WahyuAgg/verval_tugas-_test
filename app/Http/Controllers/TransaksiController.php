@@ -56,7 +56,11 @@ class TransaksiController extends Controller
         ], 201);
     }
 
-    // Ambil semua transaksi
+
+
+    /**
+     * untuk data trasnsaksi yang terkait dengan produk
+     */
     public function index()
     {
         // Ambil semua transaksi dengan relasi produk
@@ -65,6 +69,10 @@ class TransaksiController extends Controller
         return response()->json($transaksis);
     }
 
+
+    /**
+     * untuk mengambil data transaksi pembelian oleh user saat ini
+     */
     public function getTransaksiPembelian()
     {
         $userId = auth()->id();
@@ -97,7 +105,9 @@ class TransaksiController extends Controller
     }
 
 
-    // ambil transaksi penjualan
+    /**
+     * untuk mengambil data transaksi penjulan oleh user saat ini
+     */
     public function getTransaksiPenjualan()
     {
         // Ambil ID user saat ini
@@ -128,7 +138,7 @@ class TransaksiController extends Controller
 
 
 
-
+    // Endpoint untuk terima pesanan oleh penjual
     public function konfirmasiPenjual($id)
     {
         $transaksi = Transaksi::findOrFail($id);

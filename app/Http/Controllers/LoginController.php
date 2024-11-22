@@ -31,13 +31,13 @@ class LoginController extends Controller
 
         if ($user) {
             // Periksa apakah verification_date kosong (akun belum diverifikasi)
-            if (is_null($user->verification_date)) {
-                return response()->json([
-                    'message' => 'Akun belum di .',
-                    'user_id' => $user->id_user,
-                    'email' => $user->email
-                ], 403); // 403 Forbidden untuk akun yang belum diverifikasi
-            }
+            // if (is_null($user->verification_date)) {
+            //     return response()->json([
+            //         'message' => 'Akun belum di verifikasi.',
+            //         'user_id' => $user->id_user,
+            //         'email' => $user->email
+            //     ], 403); // 403 Forbidden untuk akun yang belum diverifikasi
+            // }
 
             // Verifikasi password
             if (password_verify($request->password, $user->password)) {

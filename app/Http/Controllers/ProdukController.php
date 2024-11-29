@@ -262,7 +262,7 @@ class ProdukController extends Controller
     /**
      * untuk mengambil produk yang difilter
      */
-    public function get_filtered_produk(Request $request)
+    public function getFilteredProduk(Request $request)
     {
         Log::info($request);
         // Mendapatkan parameter dari permintaan
@@ -356,4 +356,104 @@ class ProdukController extends Controller
         // Mengembalikan data produk sebagai respons JSON
         return response()->json($transformedProduk);
     }
+
+    /**
+     * search, filter, and short produk
+     */
+    public function advancedSearchProduk(Request $request)
+    {
+        $keywords = $request->input('keywords', []);
+        $array_subkategori = $request->input('array_subkategori', []);
+        $array_kategori = $request->input('array_kategori', []);
+        $anti_kategori = $request->input('anti_kategori', false);
+        $sort_by = $request->input('sort_by', null); // Parameter untuk sorting
+
+        // Validasi: Pastikan minimal ada salah satu filter aktif
+        if (empty($keywords) && empty($array_subkategori) && empty($array_kategori)) {
+            return response()->json(['error' => 'At least one filter (keywords, subkategori, or kategori) is required.'], 400);
+        }
+
+        // Log parameter untuk debugging
+        Log::info('Search and Filter Parameters:', [
+            'keywords' => $keywords,
+            'subkategori' => $array_subkategori,
+            'kategori' => $array_kategori,
+            'anti_kategori' => $anti_kategori,
+            'sort_by' => $sort_by,
+        ]);
+
+        // Bangun query dasar
+        $query = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk']);
+
+        // Tambahkan kondisi berdasarkan keywords
+        if (!empty($keywords)) {
+            foreach ($keywords as $keyword) {
+                $query->where('nama_produk', 'LIKE', '%' . $keyword . '%');
+            }
+        }
+
+        // Tambahkan kondisi berdasarkan subkategori
+        if (!empty($array_subkategori)) {
+            $query->whereIn('id_subkategori', $array_subkategori);
+        }
+
+        // Tambahkan kondisi berdasarkan kategori
+        if (!empty($array_kategori)) {
+            $query->whereHas('subkategori.kategori', function ($query) use ($array_kategori) {
+                $query->whereIn('id_kategori', $array_kategori);
+            });
+        }
+
+        // Tambahkan kondisi untuk anti_kategori
+        if ($anti_kategori) {
+            $query->whereNull('id_subkategori');
+        }
+
+        // Tambahkan logika sorting berdasarkan parameter sort_by
+        if ($sort_by) {
+            switch ($sort_by) {
+                case 'harga_tertinggi':
+                    $query->orderBy('harga', 'desc');
+                    break;
+                case 'harga_terendah':
+                    $query->orderBy('harga', 'asc');
+                    break;
+                case 'terbaru':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'terlama':
+                    $query->orderBy('created_at', 'asc');
+                    break;
+                default:
+                    // Jika parameter tidak valid, tidak ada sorting yang diterapkan
+                    Log::warning("Invalid sort_by parameter: $sort_by");
+                    break;
+            }
+        }
+
+        // Ambil data produk
+        $products = $query->distinct('id_produk')->get();
+
+        // Tambahkan logika untuk increment search_point jika ada keywords
+        if (!empty($keywords)) {
+            foreach ($products as $product) {
+                /** @var Produk $product */
+                $product->search_point += 1;
+                $product->save();
+            }
+        }
+
+        // Transform hasil produk
+        $productsResult = $products->map(function ($item) {
+            return $item->getTransformedAttributes(); // Memanggil method transformasi
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $productsResult,
+        ]);
+    }
+
+
+
 }

@@ -131,7 +131,14 @@ Route::post('/produk/search_produk', [ProdukController::class, 'searchProduk']);
     // $request->input('array_subkategori', []);
     // $request->input('array_kategori', []);
     // $request->input('anti_kategori', false);
-Route::post('/produk/filter', [ProdukController::class, 'get_filtered_produk']);
+Route::post('/produk/filter', [ProdukController::class, 'getFilteredProduk']);
+
+/// search and filter produk, parameter Request yg berisi:
+// $request->input('keywords', []);
+// $request->input('array_subkategori', []);
+// $request->input('array_kategori', []);
+// $request->input('anti_kategori', false);
+Route::post('/produk/search_filter', [ProdukController::class, 'advancedSearchProduk']);
 
     // get produk by top search
 Route::get('/top-products', [ProdukController::class, 'getTopSearchProducts']);

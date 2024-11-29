@@ -367,10 +367,12 @@ class ProdukController extends Controller
         $array_kategori = $request->input('array_kategori', []);
         $anti_kategori = $request->input('anti_kategori', false);
         $sort_by = $request->input('sort_by', null); // Parameter untuk sorting
+        $min_price = $request->input('min_price', null); // Harga minimum
+        $max_price = $request->input('max_price', null); // Harga maksimum
 
         // Validasi: Pastikan minimal ada salah satu filter aktif
-        if (empty($keywords) && empty($array_subkategori) && empty($array_kategori)) {
-            return response()->json(['error' => 'At least one filter (keywords, subkategori, or kategori) is required.'], 400);
+        if (empty($keywords) && empty($array_subkategori) && empty($array_kategori) && is_null($min_price) && is_null($max_price)) {
+            return response()->json(['error' => 'At least one filter (keywords, subkategori, kategori, or price range) is required.'], 400);
         }
 
         // Log parameter untuk debugging
@@ -380,6 +382,8 @@ class ProdukController extends Controller
             'kategori' => $array_kategori,
             'anti_kategori' => $anti_kategori,
             'sort_by' => $sort_by,
+            'min_price' => $min_price,
+            'max_price' => $max_price,
         ]);
 
         // Bangun query dasar
@@ -407,6 +411,16 @@ class ProdukController extends Controller
         // Tambahkan kondisi untuk anti_kategori
         if ($anti_kategori) {
             $query->whereNull('id_subkategori');
+        }
+
+        // Tambahkan kondisi berdasarkan harga minimum
+        if (!is_null($min_price)) {
+            $query->where('harga', '>=', $min_price);
+        }
+
+        // Tambahkan kondisi berdasarkan harga maksimum
+        if (!is_null($max_price)) {
+            $query->where('harga', '<=', $max_price);
         }
 
         // Tambahkan logika sorting berdasarkan parameter sort_by
@@ -453,6 +467,7 @@ class ProdukController extends Controller
             'data' => $productsResult,
         ]);
     }
+
 
 
 

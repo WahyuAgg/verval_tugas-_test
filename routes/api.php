@@ -229,4 +229,11 @@ use App\Http\Controllers\UlasanController;
     // ]);
 Route::middleware('auth:sanctum')->post('/ulasan', [UlasanController::class, 'store']);
 
+// ------------------------------------------------------------------------------------------------------------------------------
+// CONTROLLER ALAMAT
+use App\Http\Controllers\AlamatController;
+
+Route::post('/alamat', [AlamatController::class, 'store']);
+
+
 

@@ -30,15 +30,6 @@ class LoginController extends Controller
         $user = RefindsUser::where('email', $request->email)->first();
 
         if ($user) {
-            // Periksa apakah verification_date kosong (akun belum diverifikasi)
-            // if (is_null($user->verification_date)) {
-            
-            //     return response()->json([
-            //         'message' => 'Akun belum di verifikasi. Periksa email Anda untuk verifikasi',
-            //         'user_id' => $user->id_user,
-            //         'email' => $user->email
-            //     ], 403); // 403 Forbidden untuk akun yang belum diverifikasi
-            // }
 
             // Verifikasi password
             if (password_verify($request->password, $user->password)) {
@@ -50,6 +41,18 @@ class LoginController extends Controller
                     'token' => $token
                 ], 200);
             }
+            
+            // Periksa apakah verification_date kosong (akun belum diverifikasi)
+            if (is_null($user->verification_date)) {
+
+                return response()->json([
+                    'message' => 'Akun belum di verifikasi. Periksa email Anda untuk verifikasi',
+                    'id_user' => $user->id_user,
+                    'email' => $user->email
+                ], 403); // 403 Forbidden untuk akun yang belum diverifikasi
+            }
+
+
         }
 
         // Respon jika kredensial tidak valid

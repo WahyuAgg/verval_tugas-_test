@@ -19,47 +19,77 @@ class AccountVerificationController extends Controller
      * $request -> email
      */
 
-     public function sendVerificationToken($id_user)
-     {
-         // Cari user berdasarkan id_user
-         $user = RefindsUser::find($id_user);
+    public function sendVerificationToken($id_user)
+    {
+        try {
+            // Cari user berdasarkan id_user
+            $user = RefindsUser::find($id_user);
 
-         // Periksa apakah user ada
-         if (!$user) {
-             return response()->json(['message' => 'User not found.'], 404);
-         }
+            // Periksa apakah user ada
+            if (!$user) {
+                return response()->json([
+                    'message' => 'User not found.',
+                    'result' => 'error',
+                ], 404);
+            }
 
-         // Cek jika ada token yang masih berlaku dan hapus token lama
-         $existingVerification = AccountVerification::where('id_user', $user->id_user)
-                                                     ->where('expires_at', '>', Carbon::now())
-                                                     ->first();
+            // Cek jika ada token yang masih berlaku dan hapus token lama
+            $existingVerification = AccountVerification::where('id_user', $user->id_user)
+                ->where('expires_at', '>', Carbon::now())
+                ->first();
 
-         if ($existingVerification) {
-             // Token masih berlaku, hapus token yang lama
-             $existingVerification->delete();
-         }
+            if ($existingVerification) {
+                // Token masih berlaku, hapus token yang lama
+                $existingVerification->delete();
+            }
 
-         // Buat token verifikasi baru
-         $token = Str::random(60);
+            // Buat token verifikasi baru
+            $token = Str::random(60);
 
-         // Simpan atau update token verifikasi di database
-         AccountVerification::updateOrCreate(
-             ['id_user' => $user->id_user],
-             [
-                 'verification_token' => $token,
-                 'expires_at' => Carbon::now()->addHours(24),
-                 'status' => 'pending',
-             ]
-         );
+            // Simpan atau update token verifikasi di database
+            $verification = AccountVerification::updateOrCreate(
+                ['id_user' => $user->id_user],
+                [
+                    'verification_token' => $token,
+                    'expires_at' => Carbon::now()->addHours(24),
+                    'status' => 'pending',
+                ]
+            );
 
-         // Kirimkan token ke pengguna melalui email
-         Mail::to($user->email)->send(new AccountVerificationMail($token));
+            // Cek apakah penyimpanan berhasil
+            if (!$verification) {
+                return response()->json([
+                    'message' => 'Failed to generate verification token.',
+                    'result' => 'error',
+                ], 500);
+            }
 
-         return response()->json([
-             'message' => 'Verification token generated.',
-             'verification_token' => $token,
-         ]);
-     }
+            // Kirimkan token ke pengguna melalui email
+            try {
+                Mail::to($user->email)->send(new AccountVerificationMail($token));
+            } catch (\Exception $e) {
+                // Menangani error pengiriman email
+                return response()->json([
+                    'message' => 'Failed to send verification email.',
+                    'result' => 'error',
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
+
+            // Kembalikan response sukses
+            return response()->json([
+                'message' => 'Verification token generated and email sent.',
+                'result' => 'success',
+                'verification_token' => $token,
+            ]);
+        } catch (\Exception $e) {
+            // Menangani exception lainnya
+            return response()->json([
+                'message' => 'An unexpected error occurred.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
 
 
@@ -91,7 +121,11 @@ class AccountVerificationController extends Controller
              'verification_date' => Carbon::now() // Mengisi tanggal verifikasi
          ]);
 
-         return response()->json(['message' => 'Account successfully verified.']);
+        // Mengambil URL frontend dari konfigurasi
+        $frontendUrl = config('frontend.url');
+
+        return redirect()->to($frontendUrl . '/login/' . urlencode('Verifikasi akun Anda berhasil, silahkan login.'));
+
      }
 
 

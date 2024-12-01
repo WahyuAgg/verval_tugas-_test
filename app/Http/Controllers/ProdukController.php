@@ -337,10 +337,9 @@ class ProdukController extends Controller
      */
     public function getProdukById($id)
     {
-        // Mencari produk berdasarkan id_produk
+        // Mencari produk berdasarkan id_produk dengan relasi terkait
         $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
-            ->where('id_produk', $id)
-            // ->where('status_post', 'available') // Opsional: memastikan hanya produk "available"
+        ->where('id_produk', $id)
             ->first();
 
         if (!$produk) {
@@ -350,12 +349,19 @@ class ProdukController extends Controller
             ], 404);
         }
 
+        // Ambil rata-rata rating dari user produk
+        $averageRating = $produk->user ? $produk->user->getAverageRating() : null;
+
         // Transformasi atribut produk (jika ada metode transformasi di model)
         $transformedProduk = $produk->getTransformedAttributes();
+
+        // Tambahkan rata-rata rating ke data produk
+        $transformedProduk['average_user_rating'] = $averageRating ?? 0; // Default 0 jika tidak ada rating
 
         // Mengembalikan data produk sebagai respons JSON
         return response()->json($transformedProduk);
     }
+
 
     /**
      * search, filter, and short produk

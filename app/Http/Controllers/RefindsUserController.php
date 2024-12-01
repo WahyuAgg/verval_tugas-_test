@@ -89,5 +89,21 @@ class RefindsUserController extends Controller
         }
     }
 
+    public function getUserById($id_user)
+    {
+        // Ambil data user dengan alamat dan produk
+        $user = RefindsUser::with(['alamat', 'produk'])->find($id_user);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Tambahkan rata-rata rating sebagai atribut ke user
+        $user->average_rating = $user->getAverageRating();
+
+        return response()->json($user);
+    }
+
+
 
 }

@@ -29,10 +29,7 @@ class Transaksi extends Model
 
     // Relasi
 
-    public function produk()
-    {
-        return $this->belongsTo(Produk::class, 'id_produk');
-    }
+
 
     public function alamat()
     {
@@ -42,6 +39,17 @@ class Transaksi extends Model
     public function userPembeli()
     {
         return $this->belongsTo(User::class, 'id_user_pembeli');
+    }
+
+
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
+    }
+
+    public function ulasan()
+    {
+        return $this->hasOne(Ulasan::class, 'id_transaksi', 'id_transaksi');
     }
 
     // Fungsi untuk konfirmasi penjual

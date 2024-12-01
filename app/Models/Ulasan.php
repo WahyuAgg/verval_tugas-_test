@@ -19,8 +19,9 @@ class Ulasan extends Model
         'tanggal_ulasan'
     ];
 
+
     public function transaksi()
     {
-        return $this->belongsTo(Transaksi::class, 'id_transaksi');
+        return $this->belongsTo(Transaksi::class, 'id_transaksi', 'id_transaksi');
     }
 }

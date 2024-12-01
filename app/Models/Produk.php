@@ -38,16 +38,20 @@ class Produk extends Model
         return $this->belongsTo(Alamat::class, 'id_alamat');
     }
 
-    // Relasi ke model User
-    public function user()
-    {
-        return $this->belongsTo(RefindsUser::class, 'id_user');
-    }
-
     // Relasi ke model GambarProduk
     public function gambarProduk()
     {
         return $this->hasMany(GambarProduk::class, 'id_produk');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(RefindsUser::class, 'id_user', 'id_user');
+    }
+
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class, 'id_produk', 'id_produk');
     }
 
     public function getTransformedAttributes()

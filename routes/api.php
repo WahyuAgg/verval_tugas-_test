@@ -81,6 +81,10 @@ Route::get('/get_user', [RefindsUserController::class, 'getUserData'])->middlewa
 Route::post('/update_user', [RefindsUserController::class, 'updateUserData'])->middleware('auth:sanctum');
 
 
+Route::get('/user_public/{id_user}', [RefindsUserController::class, 'getUserById']);
+
+
+
 
 // ------------------------------------------------------------------------------------------------------------------------------
 // CONTROLLER PRODUK GET

@@ -24,23 +24,23 @@ class SeederDbRefinds extends Seeder
         // SubKategori::factory(0)->create();
 
         /// RefindsUser & Alamat
-        RefindsUser::factory(30)->create();
-        Alamat::factory(120)->create();
+        // RefindsUser::factory(30)->create();
+        // Alamat::factory(120)->create();
 
-        /// produk + gambar produk
-        $jumlahProduk = 500;
-        Produk::factory()->count($jumlahProduk)->create()
-        ->each(function ($produk) {
-            // Membuat 4 gambar untuk setiap produk
-            GambarProduk::factory()->count(4)->create([
-                'id_produk' => $produk->id_produk, // Menghubungkan gambar dengan produk
-            ]);
-        });
+        // /// produk + gambar produk
+        // $jumlahProduk = 500;
+        // Produk::factory()->count($jumlahProduk)->create()
+        // ->each(function ($produk) {
+        //     // Membuat 4 gambar untuk setiap produk
+        //     GambarProduk::factory()->count(4)->create([
+        //         'id_produk' => $produk->id_produk, // Menghubungkan gambar dengan produk
+        //     ]);
+        // });
 
 
 
         /// traksaksi + ulasan
-        $jumlahTransaksi = 120;
+        $jumlahTransaksi = 250;
         Transaksi::factory()
         ->count($jumlahTransaksi)
         ->create()

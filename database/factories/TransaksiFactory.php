@@ -29,7 +29,7 @@ class TransaksiFactory extends Factory
             'id_user_pembeli' => $userPembeli->id_user, // Mengambil id_user secara acak
             'tanggal_transaksi_dibuat' => now(),
             'deskripsi' => $this->faker->paragraph,
-            'harga' => $this->faker->randomFloat(2, 1, 10000),
+            // 'harga' => $this->faker->randomFloat(2, 1, 10000),
             'tgl_konfirm_penjual' => $this->faker->optional(0.3)->dateTime(), // 30% kemungkinan mendapatkan tanggal
             'tgl_pembatalan_pembeli' => $this->faker->optional(0.2)->dateTime(), // 20% kemungkinan mendapatkan tanggal
             'tgl_pembatalan_penjual' => $this->faker->optional(0.2)->dateTime(), // 20% kemungkinan mendapatkan tanggal

@@ -115,7 +115,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_user_pembeli');
             $table->dateTime('tanggal_transaksi_dibuat')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->text('deskripsi')->nullable();
-            $table->decimal('harga', 15, 2)->check('harga > 0');
+            // $table->decimal('harga', 15, 2)->check('harga > 0');
             $table->dateTime('tgl_konfirm_penjual')->nullable();
             $table->dateTime('tgl_pembatalan_pembeli')->nullable();
             $table->dateTime('tgl_pembatalan_penjual')->nullable();

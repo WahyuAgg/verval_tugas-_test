@@ -339,7 +339,7 @@ class ProdukController extends Controller
     {
         // Mencari produk berdasarkan id_produk dengan relasi terkait
         $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
-        ->where('id_produk', $id)
+            ->where('id_produk', $id)
             ->first();
 
         if (!$produk) {
@@ -366,70 +366,49 @@ class ProdukController extends Controller
     /**
      * search, filter, and short produk
      */
+
     public function advancedSearchProduk(Request $request)
     {
-        $keywords = $request->input('keywords', []);
-        $array_subkategori = $request->input('array_subkategori', []);
-        $array_kategori = $request->input('array_kategori', []);
-        $anti_kategori = $request->input('anti_kategori', false);
-        $sort_by = $request->input('sort_by', null); // Parameter untuk sorting
-        $min_price = $request->input('min_price', null); // Harga minimum
-        $max_price = $request->input('max_price', null); // Harga maksimum
-
-        // Validasi: Pastikan minimal ada salah satu filter aktif
-        if (empty($keywords) && empty($array_subkategori) && empty($array_kategori) && is_null($min_price) && is_null($max_price)) {
-            return response()->json(['error' => 'At least one filter (keywords, subkategori, kategori, or price range) is required.'], 400);
-        }
-
-        // Log parameter untuk debugging
-        Log::info('Search and Filter Parameters:', [
-            'keywords' => $keywords,
-            'subkategori' => $array_subkategori,
-            'kategori' => $array_kategori,
-            'anti_kategori' => $anti_kategori,
-            'sort_by' => $sort_by,
-            'min_price' => $min_price,
-            'max_price' => $max_price,
+        // Validasi input
+        $request->validate([
+            'keywords' => 'nullable|array',
+            'keywords.*' => 'string|max:255',
+            'sort_by' => 'nullable|in:harga_tertinggi,harga_terendah,terbaru,terlama',
+            'min_price' => 'nullable|numeric|min:0',
+            'max_price' => 'nullable|numeric|min:0',
         ]);
 
-        // Bangun query dasar
+        $keywords = $request->input('keywords', []);
+        $sort_by = $request->input('sort_by', null);
+        $min_price = $request->input('min_price', null);
+        $max_price = $request->input('max_price', null);
+
+        // Validasi tambahan
+        if ($min_price !== null && $max_price !== null && $min_price > $max_price) {
+            return response()->json(['error' => 'Minimum price cannot exceed maximum price.'], 400);
+        }
+
+        // Query dasar
         $query = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk']);
 
-        // Tambahkan kondisi berdasarkan keywords
+        // Tambahkan filter jika keywords ada
         if (!empty($keywords)) {
-            foreach ($keywords as $keyword) {
-                $query->where('nama_produk', 'LIKE', '%' . $keyword . '%');
-            }
-        }
-
-        // Tambahkan kondisi berdasarkan subkategori
-        if (!empty($array_subkategori)) {
-            $query->whereIn('id_subkategori', $array_subkategori);
-        }
-
-        // Tambahkan kondisi berdasarkan kategori
-        if (!empty($array_kategori)) {
-            $query->whereHas('subkategori.kategori', function ($query) use ($array_kategori) {
-                $query->whereIn('id_kategori', $array_kategori);
+            $query->where(function ($q) use ($keywords) {
+                foreach ($keywords as $keyword) {
+                    $q->orWhere('nama_produk', 'LIKE', '%' . $keyword . '%');
+                }
             });
         }
 
-        // Tambahkan kondisi untuk anti_kategori
-        if ($anti_kategori) {
-            $query->whereNull('id_subkategori');
-        }
-
-        // Tambahkan kondisi berdasarkan harga minimum
-        if (!is_null($min_price)) {
+        // Filter berdasarkan harga
+        if ($min_price !== null) {
             $query->where('harga', '>=', $min_price);
         }
-
-        // Tambahkan kondisi berdasarkan harga maksimum
-        if (!is_null($max_price)) {
+        if ($max_price !== null) {
             $query->where('harga', '<=', $max_price);
         }
 
-        // Tambahkan logika sorting berdasarkan parameter sort_by
+        // Sorting
         if ($sort_by) {
             switch ($sort_by) {
                 case 'harga_tertinggi':
@@ -444,37 +423,35 @@ class ProdukController extends Controller
                 case 'terlama':
                     $query->orderBy('created_at', 'asc');
                     break;
-                default:
-                    // Jika parameter tidak valid, tidak ada sorting yang diterapkan
-                    Log::warning("Invalid sort_by parameter: $sort_by");
-                    break;
             }
         }
 
-        // Ambil data produk
-        $products = $query->distinct('id_produk')->get();
+        // Eksekusi query dengan pagination
+        $paginatedProducts = $query->distinct('id_produk')->paginate(10);
 
-        // Tambahkan logika untuk increment search_point jika ada keywords
-        if (!empty($keywords)) {
-            foreach ($products as $product) {
-                /** @var Produk $product */
-                $product->search_point += 1;
-                $product->save();
-            }
-        }
-
-        // Transform hasil produk
-        $productsResult = $products->map(function ($item) {
+        // Transformasi data produk menggunakan map
+        $transformedProducts = $paginatedProducts->getCollection()->map(function ($item) {
             return $item->getTransformedAttributes(); // Memanggil method transformasi
         });
 
+        // Replace the collection in paginator with the transformed data
+        $paginatedProducts->setCollection($transformedProducts);
+
+        // Increment search points jika keywords ada
+        if (!empty($keywords)) {
+            $productIds = $paginatedProducts->pluck('id_produk')->toArray();
+            Produk::whereIn('id_produk', $productIds)->increment('search_point', 1);
+        }
+
         return response()->json([
             'status' => 'success',
-            'data' => $productsResult,
+            'data' => $paginatedProducts->items(),
+            'pagination' => [
+                'current_page' => $paginatedProducts->currentPage(),
+                'last_page' => $paginatedProducts->lastPage(),
+                'total' => $paginatedProducts->total(),
+            ],
         ]);
     }
-
-
-
 
 }

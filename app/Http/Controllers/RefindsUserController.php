@@ -101,8 +101,14 @@ class RefindsUserController extends Controller
         // Tambahkan rata-rata rating sebagai atribut ke user
         $user->average_rating = $user->getAverageRating();
 
+        // Transformasikan setiap produk menggunakan fungsi getTransformedAttributes
+        $user->produk = $user->produk->map(function ($produk) {
+            return $produk->getTransformedAttributes();
+        });
+
         return response()->json($user);
     }
+
 
 
 

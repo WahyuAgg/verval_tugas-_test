@@ -19,7 +19,7 @@ class UlasanController extends Controller
             'id_transaksi' => 'required|exists:transaksi,id_transaksi',
             'rating' => 'required|integer|min:1|max:5',
             'komentar' => 'required|string',
-            'tanggal_ulasan' => 'required|date',
+            // 'tanggal_ulasan' => 'required|date',
         ]);
 
         Ulasan::create([

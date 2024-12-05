@@ -46,7 +46,7 @@ class TransaksiController extends Controller
             'id_user_pembeli' => $request->query('id_user_pembeli'),
             'tanggal_transaksi_dibuat' => now(),
             'deskripsi' => $produk->deskripsi ?? '', // Jika ada deskripsi produk
-            // 'harga' => $produk->harga,
+            'harga' => $produk->harga,
             'status_transaksi' => 'pending', // Status default transaksi
         ]);
 

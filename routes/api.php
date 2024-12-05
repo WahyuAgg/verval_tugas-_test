@@ -239,7 +239,8 @@ use App\Http\Controllers\UlasanController;
     //     'komentar' => 'required|string',
     //     'tanggal_ulasan' => 'required|date',
     // ]);
-Route::middleware('auth:sanctum')->post('/ulasan', [UlasanController::class, 'store']);
+// Route::middleware('auth:sanctum')->post('/ulasan', [UlasanController::class, 'store']);
+Route::post('/ulasan', [UlasanController::class, 'store']);
 
 // ------------------------------------------------------------------------------------------------------------------------------
 // CONTROLLER ALAMAT

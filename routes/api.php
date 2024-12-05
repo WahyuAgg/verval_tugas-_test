@@ -112,11 +112,17 @@ Route::get('/user/produk', [ProdukController::class, 'getUserProduk'])->middlewa
 
 
     // get produk belum di acc
-Route::get('/produk/unacc', [ProdukController::class, 'getUnACCProduk']);
+Route::get('/produk/status/unacc', [ProdukController::class, 'getUnaccProduk']);
 
-    // Set acc/reject produk
-    // true = acc, false = reject
-Route::get('produk/acc/{bool}', [ProdukController::class, 'accProduk']);
+// Set acc/reject produk
+// true = acc, false = reject
+
+// mengambil unacc produk by id_subkategori
+Route::get('/produk/status/unacc/kategori/{id_kategori}', [ProdukController::class, 'getUnaccProdukByKategori']);
+
+
+Route::get('produk/acc/{id_produk}/{bool}', [ProdukController::class, 'accProduk']);
+
 
 
     /// untuk custom update status
@@ -146,6 +152,8 @@ Route::post('/produk/search_filter', [ProdukController::class, 'advancedSearchPr
 
     // get produk by top search
 Route::get('/top-products', [ProdukController::class, 'getTopSearchProducts']);
+
+
 
 
 

@@ -38,7 +38,7 @@ class ProdukController extends Controller
      * untuk mengambil semua produk yang belum di acc oleh admin
      * lali dikirim ke dashboard admin
      */
-    public function getUnACCProduk()
+    public function getUnaccProduk()
     {
         // Mengambil semua produk dari database
         $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
@@ -64,16 +64,40 @@ class ProdukController extends Controller
             return $item; // Pastikan mengembalikan $item
         });
 
-        // Convert the $produk object to JSON
-        $jsonData = json_encode($produk);
-
-        // Save the JSON data to a file in the storage directory
-        // Storage::disk('local')->put('produk_data.json', $jsonData);
-
 
         // Mengirimkan data ke frontend sebagai response JSON
         return response()->json($produk);
     }
+
+    public function getUnaccProdukByKategori($id_kategori)
+    {
+        $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk']) // Mengambil relasi dari produk
+        ->where('status_post', 'unacc') // Tambahkan kondisi hanya produk dengan status 'unacc'
+        ->whereHas('subkategori', function ($query) use ($id_kategori) {
+            // Filter produk berdasarkan id_kategori di tabel subkategori
+            $query->where('id_kategori', $id_kategori); // Kondisi: hanya ambil subkategori yang id_kategorinya sama
+        })
+            ->get(); // Eksekusi query dan ambil semua hasil
+
+        // Modifikasi untuk menambahkan list_url_gambar
+        $produk->transform(function ($item) {
+            $item->setAttribute('gambar_produk', $item->gambarProduk);
+
+            // Buat list_url_gambar dengan mengonversi url_gambar_produk ke URL lengkap
+            $listUrlGambar = $item->gambarProduk->map(function ($gambar) {
+                return url("{$gambar->url_gambar_produk}");
+            });
+
+            // Tambahkan atribut baru list_url_gambar
+            $item->setAttribute('list_url_gambar', $listUrlGambar);
+
+            return $item;
+        });
+
+        // Mengirimkan data ke frontend sebagai response JSON
+        return response()->json($produk);
+    }
+
 
 
 
@@ -180,6 +204,43 @@ class ProdukController extends Controller
             'message' => 'Status berhasil diperbarui',
             'produk' => $produk
         ], 200);
+    }
+
+
+    public function accProduk($id_produk, $bool)
+    {
+        try {
+            // Cari produk berdasarkan id
+            $produk = Produk::find($id_produk);
+
+            // Jika produk tidak ditemukan, kembalikan respons error
+            if (!$produk) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Produk not found'
+                ], 404);
+            }
+
+            // Ubah status_post berdasarkan nilai bool
+            $status = filter_var($bool, FILTER_VALIDATE_BOOLEAN) ? 'available' : 'rejected';
+            $produk->status_post = $status;
+
+            // Simpan perubahan
+            $produk->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Produk status updated to $status",
+                'data' => $produk
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error updating produk status: " . $e->getMessage());
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to update produk status'
+            ], 500);
+        }
     }
 
     /**

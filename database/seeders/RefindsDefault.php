@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -14,20 +13,28 @@ class RefindsDefault extends Seeder
      */
     public function run()
     {
-        // Path file SQL
-        $sqlFile = database_path('sql/refinds_default.sql');
+        // Daftar file SQL yang akan dieksekusi
+        $sqlFiles = [
+            'sql/refinds_default.sql', // File SQL untuk kategori
+            'sql/refinds_user.sql',    // File SQL untuk user
+        ];
 
-        // Periksa apakah file SQL ada
-        if (File::exists($sqlFile)) {
-            // Baca isi file
-            $sql = File::get($sqlFile);
+        foreach ($sqlFiles as $file) {
+            // Path lengkap file SQL
+            $sqlFile = database_path($file);
 
-            // Eksekusi query SQL
-            DB::unprepared($sql);
+            // Periksa apakah file SQL ada
+            if (File::exists($sqlFile)) {
+                // Baca isi file
+                $sql = File::get($sqlFile);
 
-            $this->command->info('Kategori data has been seeded successfully!');
-        } else {
-            $this->command->error('SQL file not found: ' . $sqlFile);
+                // Eksekusi query SQL
+                DB::unprepared($sql);
+
+                $this->command->info(basename($file) . ' has been seeded successfully!');
+            } else {
+                $this->command->error('SQL file not found: ' . $sqlFile);
+            }
         }
     }
 }

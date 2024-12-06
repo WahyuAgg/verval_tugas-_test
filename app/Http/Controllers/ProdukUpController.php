@@ -33,7 +33,7 @@ class ProdukUpController extends Controller
             'nama_produk' => $validatedData['nama_produk'],
             'harga' => $validatedData['harga'],
             'tanggal_post' => now(),
-            'status_post' => 'available',
+            'status_post' => 'unacc',
         ]);
 
         $uploadedImages = [];

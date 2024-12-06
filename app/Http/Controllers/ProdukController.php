@@ -43,6 +43,7 @@ class ProdukController extends Controller
         // Mengambil semua produk dari database
         $produk = Produk::with(['subkategori', 'alamat', 'user', 'gambarProduk'])
             ->where('status_post', 'unacc')
+            ->orderByDesc('id_produk') // Mengurutkan berdasarkan ID produk terbesar
             ->get();;
 
 
@@ -77,6 +78,7 @@ class ProdukController extends Controller
             // Filter produk berdasarkan id_kategori di tabel subkategori
             $query->where('id_kategori', $id_kategori); // Kondisi: hanya ambil subkategori yang id_kategorinya sama
         })
+            ->orderByDesc('id_produk') // Mengurutkan berdasarkan ID produk terbesar
             ->get(); // Eksekusi query dan ambil semua hasil
 
         // Modifikasi untuk menambahkan list_url_gambar

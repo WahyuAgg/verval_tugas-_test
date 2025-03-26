@@ -41,11 +41,6 @@ class RefindsUser extends Authenticatable
         return $this->hasMany(Alamat::class, 'id_user');
     }
 
-    public function favorit()
-    {
-        return $this->hasMany(Favorit::class, 'id_user');
-    }
-
     // Fungsi untuk mendapatkan atribut dengan transformasi URL foto profil
     public function getTransformedAttributes()
     {

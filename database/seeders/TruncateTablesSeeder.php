@@ -2,9 +2,9 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class TruncateTablesSeeder  extends Seeder
+class TruncateTablesSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('ulasan')->truncate();

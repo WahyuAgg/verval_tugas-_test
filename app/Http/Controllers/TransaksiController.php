@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Produk;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log; // Make sure to import the Log facade
+use Illuminate\Support\Facades\Log;
 
 
 

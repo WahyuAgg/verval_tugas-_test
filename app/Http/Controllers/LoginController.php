@@ -5,12 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\RefindsUser;
 
-
-namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use App\Models\RefindsUser;
-
 class LoginController extends Controller
 {
 
@@ -41,7 +35,7 @@ class LoginController extends Controller
                     'token' => $token
                 ], 200);
             }
-            
+
             // Periksa apakah verification_date kosong (akun belum diverifikasi)
             if (is_null($user->verification_date)) {
 

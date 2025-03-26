@@ -19,9 +19,6 @@ class SeederDbRefinds extends Seeder
 {
     public function run()
     {
-        /// HARD CODED
-        // Kategori::factory(0)->create();
-        // SubKategori::factory(0)->create();
 
         /// RefindsUser & Alamat
         RefindsUser::factory(30)->create();
@@ -53,26 +50,6 @@ class SeederDbRefinds extends Seeder
             }
         });
 
-
-
-        //// ON PROGRES
-
-        // Favorit::factory(5)->create();
-
-
-
-        ////////////// TESTING
-        // Seed the RefindsUser table
-        // RefindsUser::factory(50)->create();
-        // Kategori::factory(50)->create();
-
-        // Alamat::factory(50)->create();
-        // SubKategori::factory(50)->create();
-        // Produk::factory(50)->create();
-        // GambarProduk::factory(50)->create();
-        // Favorit::factory(50)->create();
-        // Transaksi::factory(50)->create();
-        // Ulasan::factory(50)->create();
     }
 }
 //
